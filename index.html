@@ -13,7 +13,7 @@
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 <link rel="icon" type="image/png" href="icons/icon-192.png">
-<title>Inpatient Handover</title>
+<title>Inpatient Handover Installable</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,700&family=Public+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
@@ -66,7 +66,7 @@ textarea{min-height:84px;resize:vertical}
 .rowline{display:grid;grid-template-columns:1fr 1fr 2fr auto;gap:8px;align-items:end;margin-top:8px}
 .rowline2{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
 .doctor{display:flex;justify-content:space-between;align-items:center;gap:10px;border-top:1px solid var(--line);padding:11px 0}.doctor:first-child{border-top:0}
-.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:18px;background:var(--ink);color:var(--bg);padding:11px 16px;border-radius:999px;font-weight:700;font-size:14px;display:none;z-index:50;box-shadow:0 10px 30px rgba(0,0,0,.25);max-width:92vw;text-align:center}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:18px;background:var(--ink);color:var(--bg);padding:11px 16px;border-radius:999px;font-weight:700;font-size:14px;display:none;z-index:20;box-shadow:0 10px 30px rgba(0,0,0,.25);max-width:92vw;text-align:center}
 .toast.show{display:block}
 .install-steps{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .step{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:16px}.step h3{margin:0 0 8px}.step ol{margin:0;padding-left:20px;color:var(--muted);font-size:14px}.step ol b{color:var(--ink)}
@@ -78,43 +78,39 @@ textarea{min-height:84px;resize:vertical}
 .copy-panel-head b{font-size:14px}.copy-panel-head span{display:block;font-size:12px;color:var(--muted);font-weight:500}
 .copy-text{width:100%;min-height:210px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:13px;line-height:1.65;background:var(--surface);white-space:pre-wrap;resize:vertical}
 details summary{cursor:pointer;font-weight:700;padding:8px 0;min-height:36px}
-.user-bar{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:8px 14px;margin-bottom:10px;font-size:13px}
-.user-bar .sync-dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--green);margin-right:6px}
-.auth-overlay{position:fixed;inset:0;background:var(--bg);z-index:40;display:flex;align-items:center;justify-content:center;padding:16px}
-.auth-card{background:var(--surface);border:1px solid var(--line);border-radius:22px;padding:28px 24px;width:100%;max-width:400px;box-shadow:var(--shadow)}
-.auth-card h2{font-family:"Fraunces",serif;margin:6px 0 6px;font-size:26px}
-.auth-card p{color:var(--muted);font-size:14px;margin:0 0 18px}
-.auth-err{background:var(--redBg);color:var(--red);padding:10px 12px;border-radius:10px;font-size:13px;font-weight:600;margin-bottom:12px;display:none}
+.chief{background:var(--amberBg);border-left:4px solid var(--amber);border-radius:12px;padding:10px 12px}
+.chief h4{color:var(--amber)}
+details.labgroup,details.res-group{border:1px solid var(--line);border-radius:12px;background:var(--surface);margin-top:8px;overflow:hidden}
+details.labgroup>summary,details.res-group>summary{list-style:none;display:flex;justify-content:space-between;align-items:center;gap:8px;padding:10px 12px;cursor:pointer;font-weight:700;font-size:14px;min-height:44px}
+details.labgroup>summary::-webkit-details-marker,details.res-group>summary::-webkit-details-marker{display:none}
+details.labgroup>summary::after,details.res-group>summary::after{content:'▾';color:var(--muted);margin-left:6px}
+details[open]>summary::after{content:'▴'}
+.gcount{font-size:12px;font-weight:700;color:var(--muted);margin-left:auto}.gcount .bad{color:var(--red)}
+.labgrid{padding:0 12px 8px}
+.labrow{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr) 104px;gap:8px;align-items:center;border-top:1px solid var(--line);padding:8px 0}
+.labrow.abn{background:linear-gradient(90deg,var(--redBg),transparent 70%);margin:0 -12px;padding:8px 12px}
+.lab-name b{display:block;font-size:13px}.lab-name small{display:block;color:var(--muted);font-size:11.5px}
+.lab-in{display:flex;align-items:center;gap:6px}.lab-in input,.lab-in select{padding:8px 10px;min-height:40px}
+.lab-unit{font-size:12px;color:var(--muted);white-space:nowrap}
+.lab-calc{font-weight:800;font-size:14px}
+.flag{font-size:11px;font-weight:800;padding:4px 9px;border-radius:999px;text-align:center;white-space:nowrap;display:inline-block}
+.flag:empty{display:none}
+.fl-N{background:var(--greenBg);color:var(--green)}.fl-H{background:var(--redBg);color:var(--red)}.fl-L{background:var(--blueBg);color:var(--blue)}.fl-C{background:var(--red);color:#fff}.fl-I{background:var(--surface2);color:var(--muted)}
+.restbl{width:100%;border-collapse:collapse;font-size:13.5px}.restbl td{padding:7px 12px;border-top:1px solid var(--line);vertical-align:top}.restbl td.v{font-weight:700}.restbl tr.abn td.v{color:var(--red)}.restbl small{display:block;color:var(--muted);font-size:11.5px}
+.restbl td.fl{text-align:right;white-space:nowrap}
+.abn-chips{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0 4px}
+.img-row textarea{min-height:44px;height:44px}
+@media(max-width:760px){.labrow{grid-template-columns:1fr 1fr}.labrow .flag{grid-column:1/-1;justify-self:start}.labrow.abn{margin:0 -12px}}
 @media(max-width:760px){.hero h1{font-size:29px}.stats{grid-template-columns:1fr 1fr}.grid2,.grid3,.install-steps{grid-template-columns:1fr}.meta{grid-template-columns:1fr}.rowline{grid-template-columns:1fr}.rowline2{grid-template-columns:1fr}.wrap{padding:14px 12px 80px}}
 </style>
 </head>
 <body>
-
-<div id="authOverlay" class="auth-overlay">
-  <div class="auth-card">
-    <div class="kicker">Internal Medicine • Handover</div>
-    <h2>Team Sign In</h2>
-    <p>Sign in with your department account to view and sync inpatient handovers.</p>
-    <div id="authErr" class="auth-err"></div>
-    <form id="loginForm">
-      <label class="f" style="margin-bottom:12px"><span>Email</span><input type="email" id="loginEmail" required autocomplete="email" placeholder="doctor@hospital.com"></label>
-      <label class="f" style="margin-bottom:16px"><span>Password</span><input type="password" id="loginPass" required autocomplete="current-password" placeholder="••••••••"></label>
-      <button type="submit" class="btn btn-primary" id="loginBtn" style="width:100%">Sign in</button>
-    </form>
-  </div>
-</div>
-
-<div class="wrap" id="appWrap" style="display:none">
-  <div class="user-bar">
-    <div><span class="sync-dot" id="syncDot"></span><b id="userEmailLabel">Signed in</b> · <span id="syncLabel" style="color:var(--muted)">Connecting…</span></div>
-    <button class="btn btn-ghost btn-small" id="signOutBtn">Sign out</button>
-  </div>
-
+<div class="wrap">
   <div class="hero">
     <div>
       <div class="kicker">Internal Medicine • Daily Handover</div>
       <h1>Hand over today’s inpatients, clearly and completely.</h1>
-      <p>For about 6 cases a day — with medical history, previous endoscopies, consultants’ opinions, and the doctors handing over and receiving.</p>
+      <p>For about 6 cases a day — with chief complaint, history, flagged labs, imaging, previous endoscopies, consultants’ opinions, and the doctors handing over and receiving.</p>
     </div>
     <div class="datebox"><label for="handoverDate">Handover date</label><input type="date" id="handoverDate" value="2026-11-20"><div style="font-size:13px;color:var(--muted);margin-top:4px" id="dateLabel">Friday, 20 November 2026</div></div>
   </div>
@@ -141,7 +137,7 @@ details summary{cursor:pointer;font-weight:700;padding:8px 0;min-height:36px}
       <button class="btn btn-ghost" id="importJsonBtn">Import JSON</button>
       <input type="file" id="importFile" accept=".json,application/json" hidden>
     </div>
-    <div id="saveStatus" style="font-size:13px;color:var(--muted);margin-top:10px">Cloud sync active — changes sync automatically across all signed-in team devices.</div>
+    <div id="saveStatus" style="font-size:13px;color:var(--muted);margin-top:10px">Autosaves on this phone as you work — close and reopen, and your cases are still here. Send the day to the receiving doctor with Export JSON.</div>
     <div id="formPanel" class="form-panel">
       <hr style="border:0;border-top:1px solid var(--line);margin:16px 0">
       <h2 style="margin:0 0 10px;font-size:20px" id="formTitle">New case</h2>
@@ -155,13 +151,30 @@ details summary{cursor:pointer;font-weight:700;padding:8px 0;min-height:36px}
         <label class="f"><span>Main diagnosis *</span><input id="fDiagnosis" placeholder="e.g. Upper GI bleed"></label>
         <label class="f"><span>Status</span><select id="fStatus"><option>Stable</option><option>Watch</option><option>Critical</option><option>Improving</option></select></label>
       </div>
-      <label class="f" style="margin-top:10px"><span>Medical history</span><textarea id="fHistory" placeholder="Past medical & surgical history, allergies, relevant background…"></textarea></label>
+      <label class="f" style="margin-top:10px"><span>Chief complaint / presenting complaint — شكوى المريض</span><textarea id="fChief" dir="auto" placeholder="e.g. Hematemesis ×2 since yesterday, abdominal distension, jaundice… / شكوى المريض"></textarea></label>
+      <label class="f" style="margin-top:10px"><span>Medical history</span><textarea id="fHistory" dir="auto" placeholder="Past medical & surgical history, allergies, relevant background…"></textarea></label>
       <div class="grid3" style="margin-top:10px">
         <label class="f"><span>Vitals</span><input id="fVitals" placeholder="BP, HR, SpO₂, Temp"></label>
-        <label class="f"><span>Key labs</span><input id="fLabs" placeholder="Hb, CRP, creatinine…"></label>
+        <label class="f"><span>Other labs / notes</span><input id="fLabs" dir="auto" placeholder="Anything not in the lab sheet below"></label>
         <label class="f"><span>Medications</span><input id="fMeds" placeholder="Current key meds"></label>
       </div>
-      <label class="f" style="margin-top:10px"><span>Plan & tasks for next shift</span><textarea id="fPlan" placeholder="What to check, repeat labs, reviews, escalation plan…"></textarea></label>
+      <label class="f" style="margin-top:10px"><span>Plan & tasks for next shift</span><textarea id="fPlan" dir="auto" placeholder="What to check, repeat labs, reviews, escalation plan…"></textarea></label>
+
+      <div class="subform">
+        <b>Laboratory investigations</b><div style="font-size:13px;color:var(--muted)">Open a group and type the numbers you have — each result is flagged Normal / High / Low automatically. Leave the rest empty.</div>
+        <div class="grid3" style="margin-top:8px">
+          <label class="f"><span>Lab date</span><input type="date" id="fLabDate"></label>
+          <label class="f"><span>Sex (for sex-specific ranges)</span><select id="fLabSex"><option value="">Auto (from Age / Sex)</option><option value="M">Male</option><option value="F">Female</option></select></label>
+          <div style="font-size:12px;color:var(--muted);align-self:end;padding-bottom:10px" id="labSexNote"></div>
+        </div>
+        <div id="labGroups"></div>
+        <div style="font-size:12px;color:var(--muted);margin-top:8px">Reference ranges are typical adult values (conventional units) and can differ slightly between laboratories / assays — always judge against your own lab’s range.</div>
+      </div>
+      <div class="subform">
+        <b>Imaging (radiology)</b><div style="font-size:13px;color:var(--muted)">CT • MRI / MRCP • Ultrasound • X-ray • Fibroscan …</div>
+        <div id="imgRows"></div>
+        <button class="btn btn-ghost btn-small" id="addImgBtn" style="margin-top:10px">+ Add imaging</button>
+      </div>
 
       <div class="subform">
         <b>Previous endoscopies</b><div style="font-size:13px;color:var(--muted)">Gastroscopy • Colonoscopy • ERCP</div>
@@ -211,157 +224,29 @@ details summary{cursor:pointer;font-weight:700;padding:8px 0;min-height:36px}
   </section>
 
   <section id="view-install" style="display:none">
-    <div class="note" style="margin-bottom:12px"><b>Cloud-Synced Team App:</b> All cases and doctors are protected by password login and synced automatically in real time across signed-in devices. It also works offline and syncs when your connection returns. You can still use <b>Export JSON</b>, <b>Download handover sheet</b> (.txt), or <b>Copy summary</b> anytime for backups or sharing.</div>
+    <div class="note" style="margin-bottom:12px"><b>About this installable version:</b> It opens from its own home-screen icon and works like an app. Your doctors, cases, handover date and handing-over / receiving selections are <b>autosaved on this phone</b> as you work, so closing the app or refreshing no longer loses them — reopen it and everything is restored. Data stays on that phone only: it does <b>not</b> sync between doctors’ phones. To hand over to another doctor, tap <b>Export JSON</b> and send that one file (for example on WhatsApp) — the receiving doctor opens this same link on their phone and taps <b>Import JSON</b> to load the full day without retyping. You can also <b>Download handover sheet</b> (.txt) or <b>Copy summary</b> when you just need a readable copy.</div>
     <div class="install-steps">
       <div class="step"><h3>📱 Android — Chrome</h3><ol><li>Open this page in <b>Chrome</b>.</li><li>Tap the <b>⋮ menu</b> (top right).</li><li>Tap <b>Install app</b> or <b>Add to Home screen</b>.</li><li>Tap <b>Install / Add</b> — an icon appears on your home screen.</li><li>Open it from the icon: it launches full-screen, like a separate app.</li></ol></div>
       <div class="step"><h3>🍎 iPhone — Safari</h3><ol><li>Open this page in <b>Safari</b>.</li><li>Tap the <b>Share</b> button.</li><li>Scroll and tap <b>Add to Home Screen</b>.</li><li>Name it <b>Handover</b> and tap <b>Add</b>.</li><li>Open it from your home screen icon.</li></ol></div>
     </div>
+    <div class="card"><h3 style="margin-top:0">Daily routine (about 6 cases)</h3><ol style="color:var(--muted);font-size:14px;padding-left:20px"><li style="margin:6px 0"><b style="color:var(--ink)">Morning:</b> Add the day’s doctors if they’re new — doctors and cases are autosaved on this phone, so they’re still here if you close and reopen the app. Then add each case with history & endoscopies.</li><li style="margin:6px 0"><b style="color:var(--ink)">During the day:</b> Add each consultant’s opinion as reviews happen.</li><li style="margin:6px 0"><b style="color:var(--ink)">Handover:</b> Pick handing-over & receiving doctors, mark each case handed over, then tap <b style="color:var(--ink)">Export JSON</b> and send that one file to the receiving doctor — they open this same link and tap <b style="color:var(--ink)">Import JSON</b> to load the cases. Or download / copy the sheet for a readable copy.</li><li style="margin:6px 0"><b style="color:var(--ink)">Next day:</b> Use “Carry unfinished to tomorrow” for cases that stay.</li></ol></div>
   </section>
 </div>
 <div class="toast" id="toast"></div>
 
-<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
-
 <script>
-const firebaseConfig = {
-  apiKey: "AIzaSyC_w_wWtIwkyiPJbYOnoY23qY_tft3SOQs",
-  authDomain: "handover-d6cfb.firebaseapp.com",
-  projectId: "handover-d6cfb",
-  storageBucket: "handover-d6cfb.firebasestorage.app",
-  messagingSenderId: "234241266308",
-  appId: "1:234241266308:web:208185ac2cfe97f51368d1"
-};
-firebase.initializeApp(firebaseConfig);
-const auth = firebase.auth();
-const db = firebase.firestore();
-db.enablePersistence({ synchronizeTabs: true }).catch(function(){});
-
 var STORAGE_KEY='inpatient-handover-autosave-v1';
 var state={doctors:[],cases:[],filter:'all'};
 var deleteArmed={};
-var currentUser=null;
-var unsubCloud=null;
-var cloudDocRef=db.collection('handover').doc('shared');
-
 function $(id){return document.getElementById(id)}
 function esc(s){return String(s||'').replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
 function toast(msg){var t=$('toast');t.textContent=msg;t.classList.add('show');setTimeout(function(){t.classList.remove('show')},2600)}
 function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,7)}
 function fmtDate(v){try{return new Date(v+'T12:00:00').toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long',year:'numeric'})}catch(e){return v}}
-
-/* Set today's date by default if none saved */
-(function initToday(){
-  var today = new Date().toISOString().slice(0,10);
-  $('handoverDate').value = today;
-  $('dateLabel').textContent = fmtDate(today);
-})();
-
-/* Local cache + Cloud Sync */
-function saveLocal(){
-  try{
-    var payload={doctors:state.doctors,cases:state.cases,handoverDate:$('handoverDate').value,fromDoctor:$('fromDoctor').value,toDoctor:$('toDoctor').value,savedAt:new Date().toISOString()};
-    localStorage.setItem(STORAGE_KEY,JSON.stringify(payload));
-  }catch(e){}
-}
-function saveState(){
-  saveLocal();
-  if(!currentUser) return;
-  $('syncLabel').textContent='Saving…';
-  cloudDocRef.set({
-    doctors: state.doctors,
-    cases: state.cases,
-    fromDoctor: $('fromDoctor').value || '',
-    toDoctor: $('toDoctor').value || '',
-    updatedAt: new Date().toISOString(),
-    updatedBy: currentUser.email || ''
-  }, { merge: true }).then(function(){
-    var t = new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
-    $('syncLabel').textContent='Synced · '+t;
-    $('saveStatus').textContent='✓ Synced to cloud · '+t+' — all signed-in team devices are up to date.';
-  }).catch(function(err){
-    $('syncLabel').textContent='Offline (saved locally)';
-    $('saveStatus').textContent='Saved locally — will sync automatically when back online.';
-  });
-}
-function loadState(){
-  try{
-    var raw=localStorage.getItem(STORAGE_KEY);if(!raw)return;
-    var d=JSON.parse(raw);if(!d)return;
-    if(Array.isArray(d.doctors))state.doctors=d.doctors;
-    if(Array.isArray(d.cases))state.cases=d.cases;
-    if(d.handoverDate){$('handoverDate').value=d.handoverDate;$('dateLabel').textContent=fmtDate(d.handoverDate);}
-    state._pendingFrom=d.fromDoctor||'';state._pendingTo=d.toDoctor||'';
-  }catch(e){}
-}
-
-/* Auth handling */
-$('loginForm').addEventListener('submit', function(e){
-  e.preventDefault();
-  var email = $('loginEmail').value.trim();
-  var pass = $('loginPass').value;
-  var errEl = $('authErr');
-  errEl.style.display = 'none';
-  $('loginBtn').disabled = true;
-  $('loginBtn').textContent = 'Signing in…';
-  auth.signInWithEmailAndPassword(email, pass).catch(function(err){
-    errEl.textContent = 'Invalid email or password. Please try again.';
-    errEl.style.display = 'block';
-    $('loginBtn').disabled = false;
-    $('loginBtn').textContent = 'Sign in';
-  });
-});
-
-$('signOutBtn').addEventListener('click', function(){
-  if(unsubCloud){ unsubCloud(); unsubCloud = null; }
-  auth.signOut();
-});
-
-auth.onAuthStateChanged(function(user){
-  currentUser = user;
-  if(user){
-    $('authOverlay').style.display = 'none';
-    $('appWrap').style.display = 'block';
-    $('userEmailLabel').textContent = user.email;
-    $('loginBtn').disabled = false;
-    $('loginBtn').textContent = 'Sign in';
-    startCloudSync();
-  } else {
-    $('authOverlay').style.display = 'flex';
-    $('appWrap').style.display = 'none';
-    if(unsubCloud){ unsubCloud(); unsubCloud = null; }
-  }
-});
-
-function startCloudSync(){
-  if(unsubCloud) unsubCloud();
-  $('syncLabel').textContent = 'Syncing…';
-  unsubCloud = cloudDocRef.onSnapshot(function(doc){
-    if(doc.exists){
-      var d = doc.data();
-      if(Array.isArray(d.doctors)) state.doctors = d.doctors;
-      if(Array.isArray(d.cases)) state.cases = d.cases;
-      renderDoctors();
-      if(typeof d.fromDoctor === 'string') $('fromDoctor').value = d.fromDoctor;
-      if(typeof d.toDoctor === 'string') $('toDoctor').value = d.toDoctor;
-      saveLocal();
-      render();
-      var t = new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
-      $('syncLabel').textContent = 'Live sync · ' + t;
-      $('saveStatus').textContent = '✓ Synced with cloud · ' + t + (d.updatedBy ? ' (last edit: ' + d.updatedBy + ')' : '');
-    } else {
-      /* First time cloud is empty: push any existing local data */
-      if(state.doctors.length || state.cases.length){ saveState(); }
-      else { $('syncLabel').textContent = 'Live sync ready'; }
-    }
-  }, function(err){
-    $('syncLabel').textContent = 'Offline mode';
-    toast('Cloud sync error: check connection or Firestore rules');
-  });
-}
-
-$('handoverDate').addEventListener('change',function(){ $('dateLabel').textContent=fmtDate(this.value); saveLocal(); render(); });
+/* Autosave on this phone (localStorage) */
+function saveState(){try{var payload={doctors:state.doctors,cases:state.cases,handoverDate:$('handoverDate').value,fromDoctor:$('fromDoctor').value,toDoctor:$('toDoctor').value,savedAt:new Date().toISOString()};localStorage.setItem(STORAGE_KEY,JSON.stringify(payload));var el=$('saveStatus');if(el){el.textContent='✓ Autosaved on this phone · '+new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'})+' — close and reopen, and your cases are still here.';}}catch(e){}}
+function loadState(){try{var raw=localStorage.getItem(STORAGE_KEY);if(!raw)return;var d=JSON.parse(raw);if(!d)return;if(Array.isArray(d.doctors))state.doctors=d.doctors;if(Array.isArray(d.cases))state.cases=d.cases;if(d.handoverDate){$('handoverDate').value=d.handoverDate;$('dateLabel').textContent=fmtDate(d.handoverDate);}state._pendingFrom=d.fromDoctor||'';state._pendingTo=d.toDoctor||'';}catch(e){}}
+$('handoverDate').addEventListener('change',function(){ $('dateLabel').textContent=fmtDate(this.value); saveState(); render(); });
 
 /* Tabs */
 document.querySelectorAll('.tab').forEach(function(b){b.addEventListener('click',function(){
@@ -394,12 +279,287 @@ $('addDoctorBtn').addEventListener('click',function(){
  $('dName').value=''; $('dSpec').value=''; toast('Doctor added'); saveState(); renderDoctors();
 });
 
+/* ================= Laboratory catalogue =================
+   type: (none)=number · q=qualitative Neg/Pos · v=viral load (Not detected / Detected + IU/mL) · c=calculated
+   lo/hi = adult reference limits (conventional units) · m/f = [lo,hi] sex-specific · cr = [criticalLow,criticalHigh]
+   s = short name (chips) · refTxt = custom reference text · posOk = positive is the "good" result (anti-HBs) */
+var LABS=[
+{g:'cbc',ic:'🩸',n:'CBC — Complete Blood Count',tests:[
+ {k:'hb',n:'Hemoglobin (Hb)',s:'Hb',u:'g/dL',m:[13.5,17.5],f:[12,15.5],cr:[7,20]},
+ {k:'rbc',n:'RBC count',u:'×10⁶/µL',m:[4.5,5.9],f:[4.1,5.1]},
+ {k:'hct',n:'Hematocrit (HCT / PCV)',s:'HCT',u:'%',m:[41,53],f:[36,46]},
+ {k:'mcv',n:'MCV',u:'fL',lo:80,hi:100},
+ {k:'mch',n:'MCH',u:'pg',lo:27,hi:33},
+ {k:'mchc',n:'MCHC',u:'g/dL',lo:32,hi:36},
+ {k:'rdw',n:'RDW',u:'%',lo:11.5,hi:14.5},
+ {k:'wbc',n:'WBC (total leukocytes)',s:'WBC',u:'×10³/µL',lo:4,hi:11,cr:[2,30]},
+ {k:'neut',n:'Neutrophils',u:'%',lo:40,hi:75},
+ {k:'lymph',n:'Lymphocytes',u:'%',lo:20,hi:45},
+ {k:'anc',n:'Absolute neutrophil count (ANC)',s:'ANC',u:'×10³/µL',lo:1.5,hi:7.5},
+ {k:'plt',n:'Platelets (PLT)',s:'PLT',u:'×10³/µL',lo:150,hi:450,cr:[20,1000]},
+ {k:'retic',n:'Reticulocytes',u:'%',lo:0.5,hi:2.5}
+]},
+{g:'liver',ic:'🧪',n:'Liver Profile (LFT)',tests:[
+ {k:'alt',n:'ALT (SGPT)',s:'ALT',u:'U/L',hi:40},
+ {k:'ast',n:'AST (SGOT)',s:'AST',u:'U/L',hi:40},
+ {k:'alp',n:'Alkaline phosphatase (ALP)',s:'ALP',u:'U/L',lo:44,hi:147},
+ {k:'ggt',n:'GGT (γ-glutamyl transferase)',s:'GGT',u:'U/L',m:[8,61],f:[5,36]},
+ {k:'tbil',n:'Total bilirubin',s:'T.bil',u:'mg/dL',lo:0.1,hi:1.2},
+ {k:'dbil',n:'Direct (conjugated) bilirubin',s:'D.bil',u:'mg/dL',hi:0.3},
+ {k:'ibil',type:'c',n:'Indirect bilirubin (calculated)',s:'I.bil',u:'mg/dL',hi:0.9,calc:function(d){var t=numOf(d,'tbil'),x=numOf(d,'dbil');if(t==null||x==null||x>t)return null;return{v:Math.round((t-x)*100)/100};}},
+ {k:'alb',n:'Serum albumin',s:'Alb',u:'g/dL',lo:3.5,hi:5.0},
+ {k:'tp',n:'Total protein',u:'g/dL',lo:6.0,hi:8.3},
+ {k:'meld',type:'c',n:'MELD / MELD-Na (calculated)',s:'MELD',noflag:true,refTxt:'needs T.bil, INR, creatinine (+ Na)',calc:function(d){var b=numOf(d,'tbil'),i=numOf(d,'inr'),c=numOf(d,'creat'),n=numOf(d,'na');if(b==null||i==null||c==null)return null;b=Math.max(1,b);i=Math.max(1,i);c=Math.min(4,Math.max(1,c));var m=Math.min(40,Math.round(10*(0.957*Math.log(c)+0.378*Math.log(b)+1.12*Math.log(i)+0.643)));var out='MELD '+m;if(n!=null&&m>11){var na=Math.min(137,Math.max(125,n));var mn=Math.min(40,Math.round(m+1.32*(137-na)-0.033*m*(137-na)));out+=' · MELD-Na '+mn;}return{v:m,d:out};}}
+]},
+{g:'coag',ic:'🩹',n:'Coagulation',tests:[
+ {k:'pt',n:'Prothrombin time (PT)',u:'sec',lo:11,hi:13.5},
+ {k:'inr',n:'INR',s:'INR',u:'',lo:0.8,hi:1.2,cr:[null,5]},
+ {k:'aptt',n:'aPTT',u:'sec',lo:25,hi:35},
+ {k:'fib',n:'Fibrinogen',u:'mg/dL',lo:200,hi:400}
+]},
+{g:'renal',ic:'💧',n:'Renal Profile & Electrolytes',tests:[
+ {k:'urea',n:'Urea',s:'Urea',u:'mg/dL',lo:15,hi:45},
+ {k:'bun',n:'Blood urea nitrogen (BUN)',s:'BUN',u:'mg/dL',lo:7,hi:20},
+ {k:'creat',n:'Serum creatinine',s:'Creat',u:'mg/dL',m:[0.7,1.3],f:[0.6,1.1]},
+ {k:'egfr',type:'c',n:'eGFR — CKD-EPI 2021 (calculated)',s:'eGFR',u:'mL/min/1.73m²',lo:60,calc:function(d,sex,age){var c=numOf(d,'creat');if(c==null||!sex||age<18)return null;var k=sex==='F'?0.7:0.9,a=sex==='F'?-0.241:-0.302;var e=142*Math.pow(Math.min(c/k,1),a)*Math.pow(Math.max(c/k,1),-1.2)*Math.pow(0.9938,age)*(sex==='F'?1.012:1);return{v:Math.round(e)};}},
+ {k:'ua',n:'Uric acid',u:'mg/dL',m:[3.5,7.2],f:[2.6,6.0]},
+ {k:'na',n:'Sodium (Na⁺)',s:'Na',u:'mmol/L',lo:135,hi:145,cr:[120,160]},
+ {k:'k',n:'Potassium (K⁺)',s:'K',u:'mmol/L',lo:3.5,hi:5.1,cr:[2.5,6.5]},
+ {k:'cl',n:'Chloride (Cl⁻)',s:'Cl',u:'mmol/L',lo:98,hi:107},
+ {k:'hco3',n:'Bicarbonate (HCO₃⁻)',s:'HCO₃',u:'mmol/L',lo:22,hi:29},
+ {k:'ca',n:'Calcium (total)',s:'Ca',u:'mg/dL',lo:8.5,hi:10.5,cr:[6.5,13]},
+ {k:'mg',n:'Magnesium',s:'Mg',u:'mg/dL',lo:1.7,hi:2.2},
+ {k:'phos',n:'Phosphorus',u:'mg/dL',lo:2.5,hi:4.5}
+]},
+{g:'panc',ic:'🧁',n:'Pancreatic, Metabolic & Other Chemistry',tests:[
+ {k:'amy',n:'Amylase',s:'Amylase',u:'U/L',lo:28,hi:100},
+ {k:'lip',n:'Lipase',s:'Lipase',u:'U/L',lo:13,hi:60},
+ {k:'rbs',n:'Blood glucose — random (RBS)',s:'RBS',u:'mg/dL',lo:70,hi:140,cr:[40,500]},
+ {k:'fbs',n:'Blood glucose — fasting (FBS)',s:'FBS',u:'mg/dL',lo:70,hi:100,cr:[40,500]},
+ {k:'hba1c',n:'HbA1c',u:'%',lo:4.0,hi:5.6},
+ {k:'tg',n:'Triglycerides',s:'TG',u:'mg/dL',hi:150},
+ {k:'ldh',n:'LDH',u:'U/L',lo:140,hi:280},
+ {k:'nh3',n:'Ammonia (venous)',s:'NH₃',u:'µg/dL',lo:15,hi:45},
+ {k:'lact',n:'Lactate',s:'Lactate',u:'mmol/L',lo:0.5,hi:2.2}
+]},
+{g:'infl',ic:'🔥',n:'Inflammatory Markers',tests:[
+ {k:'crp',n:'C-reactive protein (CRP)',s:'CRP',u:'mg/L',hi:6},
+ {k:'esr',n:'ESR (1st hour)',s:'ESR',u:'mm/hr',m:[0,15],f:[0,20]},
+ {k:'pct',n:'Procalcitonin (PCT)',s:'PCT',u:'ng/mL',hi:0.5}
+]},
+{g:'iron',ic:'🧲',n:'Anemia Work-up (Iron, B12, Folate)',tests:[
+ {k:'fe',n:'Serum iron',u:'µg/dL',lo:60,hi:170},
+ {k:'tibc',n:'TIBC',u:'µg/dL',lo:240,hi:450},
+ {k:'tsat',n:'Transferrin saturation',u:'%',lo:20,hi:50},
+ {k:'ferr',n:'Ferritin',s:'Ferritin',u:'ng/mL',m:[24,336],f:[11,307]},
+ {k:'b12',n:'Vitamin B12',s:'B12',u:'pg/mL',lo:200,hi:900},
+ {k:'fol',n:'Folate',u:'ng/mL',lo:3,hi:17}
+]},
+{g:'vir',ic:'🦠',n:'Virology (Hepatitis & Others)',tests:[
+ {k:'hbsag',type:'q',n:'HBsAg (hepatitis B surface antigen)',s:'HBsAg'},
+ {k:'antihbs',type:'q',n:'Anti-HBs (hepatitis B surface antibody)',s:'Anti-HBs',posOk:true,refTxt:'Positive = immune'},
+ {k:'hbcab',type:'q',n:'Anti-HBc total (core antibody)',s:'Anti-HBc'},
+ {k:'hbcigm',type:'q',n:'Anti-HBc IgM',s:'Anti-HBc IgM'},
+ {k:'hbeag',type:'q',n:'HBeAg',s:'HBeAg'},
+ {k:'antihbe',type:'q',n:'Anti-HBe',s:'Anti-HBe'},
+ {k:'hbvdna',type:'v',n:'HBV DNA (PCR, quantitative)',s:'HBV DNA',u:'IU/mL'},
+ {k:'hdv',type:'q',n:'Anti-HDV (hepatitis D)',s:'Anti-HDV'},
+ {k:'hcvab',type:'q',n:'Anti-HCV (hepatitis C antibody)',s:'Anti-HCV'},
+ {k:'hcvrna',type:'v',n:'HCV RNA (PCR, quantitative)',s:'HCV RNA',u:'IU/mL'},
+ {k:'havigm',type:'q',n:'Anti-HAV IgM (hepatitis A)',s:'HAV IgM'},
+ {k:'hevigm',type:'q',n:'Anti-HEV IgM (hepatitis E)',s:'HEV IgM'},
+ {k:'hiv',type:'q',n:'HIV Ag/Ab',s:'HIV'},
+ {k:'cmv',type:'q',n:'CMV IgM',s:'CMV IgM'}
+]},
+{g:'immune',ic:'🧬',n:'Autoimmune Liver & Celiac Serology',tests:[
+ {k:'ana',type:'q',n:'ANA (antinuclear antibody)',s:'ANA'},
+ {k:'asma',type:'q',n:'Anti-smooth muscle antibody (ASMA)',s:'ASMA'},
+ {k:'ama',type:'q',n:'Anti-mitochondrial antibody (AMA)',s:'AMA'},
+ {k:'lkm',type:'q',n:'Anti-LKM-1',s:'Anti-LKM1'},
+ {k:'igg',n:'Immunoglobulin G (IgG, total)',s:'IgG',u:'mg/dL',lo:700,hi:1600},
+ {k:'cerul',n:'Ceruloplasmin',u:'mg/dL',lo:20,hi:60},
+ {k:'a1at',n:'Alpha-1 antitrypsin',u:'mg/dL',lo:90,hi:200},
+ {k:'ttg',type:'q',n:'Anti-tTG IgA (celiac)',s:'Anti-tTG'}
+]},
+{g:'tumor',ic:'🎗️',n:'Tumor Markers',tests:[
+ {k:'afp',n:'Alpha-fetoprotein (AFP)',s:'AFP',u:'ng/mL',hi:10},
+ {k:'cea',n:'CEA',s:'CEA',u:'ng/mL',hi:5},
+ {k:'ca199',n:'CA 19-9',s:'CA 19-9',u:'U/mL',hi:37}
+]},
+{g:'stool',ic:'💩',n:'Stool & H. pylori Tests',tests:[
+ {k:'calpro',n:'Fecal calprotectin',s:'Calprotectin',u:'µg/g',hi:50},
+ {k:'hpstool',type:'q',n:'H. pylori stool antigen',s:'H. pylori Ag'},
+ {k:'hpubt',type:'q',n:'H. pylori urea breath test',s:'H. pylori UBT'},
+ {k:'fobt',type:'q',n:'Fecal occult blood (FOBT)',s:'FOBT'},
+ {k:'cdiff',type:'q',n:'C. difficile toxin',s:'C. diff toxin'}
+]},
+{g:'ascitic',ic:'🫧',n:'Ascitic Fluid Analysis',tests:[
+ {k:'ascwbc',n:'Ascitic total WBC',s:'Asc WBC',u:'cells/mm³',hi:500},
+ {k:'ascpmn',n:'Ascitic PMN (neutrophil) count',s:'Asc PMN',u:'cells/mm³',hi:250,refTxt:'< 250 (≥ 250 = SBP)'},
+ {k:'ascprot',n:'Ascitic total protein',u:'g/dL',refTxt:'< 1.5 = higher SBP risk'},
+ {k:'ascalb',n:'Ascitic albumin',u:'g/dL'},
+ {k:'saag',type:'c',n:'SAAG (calculated: serum − ascitic albumin)',s:'SAAG',u:'g/dL',refTxt:'≥ 1.1 = portal hypertension',interp:function(v){return v>=1.1?{cls:'I',txt:'High gradient (portal HTN)'}:{cls:'I',txt:'Low gradient'};},calc:function(d){var a=numOf(d,'alb'),b=numOf(d,'ascalb');if(a==null||b==null)return null;return{v:Math.round((a-b)*10)/10};}},
+ {k:'asccult',type:'q',n:'Ascitic fluid culture',s:'Asc culture'}
+]}
+];
+function numOf(d,k){var v=parseFloat(d&&d[k]);return isNaN(v)?null:v}
+function normDigits(s){return String(s||'').replace(/[٠-٩]/g,function(d){return '٠١٢٣٤٥٦٧٨٩'.indexOf(d)})}
+function ageFrom(s){var m=normDigits(s).match(/(\d{1,3})/);if(!m)return 0;var a=parseInt(m[1],10);return(a>0&&a<120)?a:0}
+function sexFrom(ageText,sel){
+ if(sel==='M'||sel==='F')return sel;
+ var s=String(ageText||'').toLowerCase();
+ if(/\b(f|female)\b/.test(s)||/انثى|أنثى|انثي|سيدة/.test(s))return 'F';
+ if(/\b(m|male)\b/.test(s)||/ذكر|رجل/.test(s))return 'M';
+ return '';
+}
+function refFor(t,sex){
+ if(t.m&&t.f){if(sex==='M')return t.m;if(sex==='F')return t.f;return[Math.min(t.m[0],t.f[0]),Math.max(t.m[1],t.f[1])];}
+ if(t.lo!=null||t.hi!=null)return[t.lo!=null?t.lo:null,t.hi!=null?t.hi:null];
+ return null;
+}
+function refText(t,sex){
+ if(t.refTxt)return t.refTxt;
+ if(t.type==='q')return 'Negative';
+ if(t.type==='v')return 'Not detected';
+ if(t.m&&t.f&&!sex)return t.m[0]+'–'+t.m[1]+' (M) · '+t.f[0]+'–'+t.f[1]+' (F)';
+ var r=refFor(t,sex);if(!r)return '';
+ if(r[0]==null)return '≤ '+r[1];
+ if(r[1]==null)return '≥ '+r[0];
+ return r[0]+'–'+r[1];
+}
+function flagFor(t,raw,sex){
+ if(raw===''||raw==null)return null;
+ if(t.type==='q'){
+  if(raw==='Positive')return t.posOk?{cls:'N',txt:'Immune'}:{cls:'H',txt:'Positive'};
+  if(raw==='Equivocal')return{cls:'H',txt:'Equivocal'};
+  if(raw==='Negative')return t.posOk?{cls:'I',txt:'Non-immune'}:{cls:'N',txt:'Negative'};
+  return null;
+ }
+ if(t.type==='v')return raw==='ND'?{cls:'N',txt:'Not detected'}:{cls:'H',txt:'Detected'};
+ var v=parseFloat(raw);if(isNaN(v))return null;
+ if(t.cr){if(t.cr[0]!=null&&v<t.cr[0])return{cls:'C',txt:'Critical ↓'};if(t.cr[1]!=null&&v>t.cr[1])return{cls:'C',txt:'Critical ↑'};}
+ if(t.interp)return t.interp(v);
+ var r=refFor(t,sex);if(!r)return null;
+ if(r[0]!=null&&v<r[0])return{cls:'L',txt:'Low ↓'};
+ if(r[1]!=null&&v>r[1])return{cls:'H',txt:'High ↑'};
+ return{cls:'N',txt:'Normal'};
+}
+function labDisp(t,raw){
+ if(t.type==='q')return raw;
+ if(t.type==='v'){if(raw==='ND')return 'Not detected';if(raw==='D')return 'Detected';return raw+' '+t.u+' (detected)';}
+ return raw+(t.u?' '+t.u:'');
+}
+function evalLabs(data,sex,age){
+ data=data||{};var out=[];
+ LABS.forEach(function(g){
+  var rows=[];
+  g.tests.forEach(function(t){
+   var raw=data[t.k],disp,fl;
+   if(t.type==='c'){
+    var r=t.calc(data,sex,age);if(!r)return;
+    raw=r.v;disp=r.d||(r.v+(t.u?' '+t.u:''));fl=t.noflag?null:flagFor(t,r.v,sex);
+   }else{
+    if(raw===undefined||raw===null||raw==='')return;
+    raw=String(raw);disp=labDisp(t,raw);fl=flagFor(t,raw,sex);
+   }
+   rows.push({t:t,raw:raw,disp:disp,fl:fl,ref:refText(t,sex)});
+  });
+  if(rows.length)out.push({g:g,rows:rows});
+ });
+ return out;
+}
+function isAbn(r){return !!(r.fl&&(r.fl.cls==='H'||r.fl.cls==='L'||r.fl.cls==='C'))}
+function shortName(t){return t.s||t.n}
+
+/* Lab entry form (built once) */
+function labRowHtml(t){
+ var inp;
+ if(t.type==='c')inp='<span class="lab-calc" data-calc="'+t.k+'">—</span>';
+ else if(t.type==='q')inp='<select class="lab-sel" data-k="'+t.k+'"><option value="">—</option><option>Negative</option><option>Positive</option><option>Equivocal</option></select>';
+ else if(t.type==='v')inp='<select class="lab-sel lab-vsel" data-k="'+t.k+'"><option value="">—</option><option value="ND">Not detected</option><option value="D">Detected</option></select><input class="lab-num" data-k="'+t.k+'" type="number" step="any" inputmode="decimal" placeholder="'+esc(t.u)+'" style="display:none">';
+ else inp='<input class="lab-val" data-k="'+t.k+'" type="number" step="any" inputmode="decimal" placeholder="—"><span class="lab-unit">'+esc(t.u||'')+'</span>';
+ return '<div class="labrow" data-k="'+t.k+'"><div class="lab-name"><b>'+esc(t.n)+'</b><small data-ref="'+t.k+'"></small></div><div class="lab-in">'+inp+'</div><span class="flag" data-flag="'+t.k+'"></span></div>';
+}
+function buildLabForm(){
+ $('labGroups').innerHTML=LABS.map(function(g){
+  return '<details class="labgroup" data-g="'+g.g+'"><summary><span>'+g.ic+' '+esc(g.n)+'</span><span class="gcount" data-gcount="'+g.g+'"></span></summary><div class="labgrid">'+g.tests.map(labRowHtml).join('')+'</div></details>';
+ }).join('');
+}
+function q1(sel){return document.querySelector(sel)}
+function collectLabs(){
+ var out={};
+ LABS.forEach(function(g){g.tests.forEach(function(t){
+  if(t.type==='c')return;
+  if(t.type==='q'){var s=q1('select.lab-sel[data-k="'+t.k+'"]');if(s&&s.value)out[t.k]=s.value;}
+  else if(t.type==='v'){var vs=q1('select.lab-sel[data-k="'+t.k+'"]'),n=q1('input.lab-num[data-k="'+t.k+'"]');if(vs&&vs.value==='ND')out[t.k]='ND';else if(vs&&vs.value==='D')out[t.k]=(n&&n.value.trim())||'D';}
+  else{var el=q1('input.lab-val[data-k="'+t.k+'"]');if(el&&el.value.trim()!=='')out[t.k]=el.value.trim();}
+ });});
+ return out;
+}
+function fillLabs(data){
+ data=data||{};
+ LABS.forEach(function(g){g.tests.forEach(function(t){
+  if(t.type==='c')return;var raw=data[t.k];
+  if(t.type==='q'){q1('select.lab-sel[data-k="'+t.k+'"]').value=raw||'';}
+  else if(t.type==='v'){
+   var s=q1('select.lab-sel[data-k="'+t.k+'"]'),n=q1('input.lab-num[data-k="'+t.k+'"]');
+   if(raw==='ND'){s.value='ND';n.value='';}else if(raw){s.value='D';n.value=(raw==='D'?'':raw);}else{s.value='';n.value='';}
+   n.style.display=s.value==='D'?'':'none';
+  }else{q1('input.lab-val[data-k="'+t.k+'"]').value=(raw==null?'':raw);}
+ });});
+}
+function updateLabUI(){
+ var sex=sexFrom($('fAge').value,$('fLabSex').value),age=ageFrom($('fAge').value),ev=evalLabs(collectLabs(),sex,age),byK={};
+ ev.forEach(function(g){g.rows.forEach(function(r){byK[r.t.k]=r;});});
+ LABS.forEach(function(g){
+  var ent=0,abn=0;
+  g.tests.forEach(function(t){
+   var r=byK[t.k],fl=q1('[data-flag="'+t.k+'"]'),rf=q1('[data-ref="'+t.k+'"]'),row=q1('.labrow[data-k="'+t.k+'"]');
+   var rt=refText(t,sex);rf.textContent=rt?'Ref: '+rt:'';
+   if(r&&r.fl&&r.fl.txt){fl.className='flag fl-'+r.fl.cls;fl.textContent=r.fl.txt;}else{fl.className='flag';fl.textContent='';}
+   if(t.type==='c'){q1('[data-calc="'+t.k+'"]').textContent=r?r.disp:'—';}
+   row.classList.toggle('abn',!!(r&&isAbn(r)));
+   if(r&&t.type!=='c')ent++;
+   if(r&&isAbn(r))abn++;
+  });
+  var parts=[];if(ent)parts.push(ent+' entered');if(abn)parts.push('<span class="bad">'+abn+' abnormal</span>');
+  q1('[data-gcount="'+g.g+'"]').innerHTML=parts.join(' · ');
+ });
+ $('labSexNote').textContent=sex==='M'?'Using male ranges':sex==='F'?'Using female ranges':'Sex unknown — showing both M / F ranges';
+}
+function onLabEvt(e){
+ var t=e.target;
+ if(t.classList.contains('lab-vsel')){var n=q1('input.lab-num[data-k="'+t.dataset.k+'"]');n.style.display=t.value==='D'?'':'none';if(t.value!=='D')n.value='';}
+ updateLabUI();
+}
+buildLabForm();
+$('labGroups').addEventListener('input',onLabEvt);
+$('labGroups').addEventListener('change',onLabEvt);
+$('fAge').addEventListener('input',updateLabUI);
+$('fLabSex').addEventListener('change',updateLabUI);
+
+/* Imaging */
+var IMG_TYPES=[
+ ['CT',['CT Abdomen & Pelvis (with contrast)','CT Abdomen & Pelvis (without contrast)','Triphasic CT Liver','CT Pancreas protocol','CT Enterography','CT Colonography','CT Angiography (CTA)','CT Chest','CT Brain']],
+ ['MRI / MRCP',['MRI Liver (multiphasic)','MRCP','MR Enterography','MRI Pelvis (perianal fistula)','MRI Brain']],
+ ['Ultrasound',['Abdominal Ultrasound','Doppler US (portal / hepatic vessels)','Pelvic Ultrasound','Chest / Pleural Ultrasound','Endoscopic Ultrasound (EUS)']],
+ ['X-ray & Others',['Chest X-ray','Abdominal X-ray (erect / supine)','Barium study','Fibroscan (liver elastography)','Echocardiography','PET-CT','HIDA scan','Other imaging']]
+];
+var IMG_ALL=[].concat.apply([],IMG_TYPES.map(function(g){return g[1]}));
+function imgRow(m){
+ m=m||{type:'',date:'',findings:''};
+ var opts='<option value="">Select study…</option>'+IMG_TYPES.map(function(g){return '<optgroup label="'+esc(g[0])+'">'+g[1].map(function(x){return '<option'+(m.type===x?' selected':'')+'>'+esc(x)+'</option>'}).join('')+'</optgroup>'}).join('');
+ if(m.type&&IMG_ALL.indexOf(m.type)<0)opts+='<option selected>'+esc(m.type)+'</option>';
+ return '<div class="rowline img-row"><label class="f"><span>Study</span><select class="i-type">'+opts+'</select></label><label class="f"><span>Date</span><input type="date" class="i-date" value="'+esc(m.date)+'"></label><label class="f"><span>Findings / impression</span><textarea class="i-find" dir="auto" placeholder="Findings / impression…">'+esc(m.findings)+'</textarea></label><button class="btn btn-ghost btn-small remove-row">Remove</button></div>';
+}
+
 /* Dynamic rows */
 function endoRow(e){e=e||{type:'Gastroscopy',date:'',findings:''};
  return '<div class="rowline endo-row"><label class="f"><span>Type</span><select class="e-type"><option '+(e.type==='Gastroscopy'?'selected':'')+'>Gastroscopy</option><option '+(e.type==='Colonoscopy'?'selected':'')+'>Colonoscopy</option><option '+(e.type==='ERCP'?'selected':'')+'>ERCP</option></select></label><label class="f"><span>Date</span><input type="date" class="e-date" value="'+esc(e.date)+'"></label><label class="f"><span>Findings</span><input class="e-find" value="'+esc(e.findings)+'" placeholder="Findings…"></label><button class="btn btn-ghost btn-small remove-row">Remove</button></div>';}
 function consultRow(c){c=c||{name:'',spec:'',opinion:''};
  return '<div class="consult-row" style="border-top:1px solid var(--line);padding-top:10px;margin-top:10px"><div class="rowline2"><label class="f"><span>Consultant name</span><input class="c-name" value="'+esc(c.name)+'" placeholder="Dr. …"></label><label class="f"><span>Specialty</span><input class="c-spec" value="'+esc(c.spec)+'" placeholder="Cardiology, GI…"></label><label class="f"><span>Date seen</span><input type="date" class="c-date" value="'+esc(c.date||'')+'"></label></div><label class="f" style="margin-top:8px"><span>Opinion & recommendation</span><textarea class="c-op" placeholder="Consultant opinion and recommendation…">'+esc(c.opinion)+'</textarea></label><button class="btn btn-ghost btn-small remove-row" style="margin-top:8px">Remove consultant</button></div>';}
-function bindRemove(scope){scope.querySelectorAll('.remove-row').forEach(function(b){b.addEventListener('click',function(){b.closest('.endo-row,.consult-row').remove();});});}
+function bindRemove(scope){scope.querySelectorAll('.remove-row').forEach(function(b){if(b._bound)return;b._bound=1;b.addEventListener('click',function(){b.closest('.endo-row,.consult-row,.img-row').remove();});});}
+$('addImgBtn').addEventListener('click',function(){var d=document.createElement('div');d.innerHTML=imgRow();$('imgRows').appendChild(d.firstChild);bindRemove($('imgRows'));});
 $('addEndoBtn').addEventListener('click',function(){var d=document.createElement('div');d.innerHTML=endoRow();$('endoRows').appendChild(d.firstChild);bindRemove($('endoRows'));});
 $('addConsultBtn').addEventListener('click',function(){var d=document.createElement('div');d.innerHTML=consultRow();$('consultRows').appendChild(d.firstChild);bindRemove($('consultRows'));});
 
@@ -409,7 +569,12 @@ function openForm(c){
  $('formTitle').textContent=c?'Edit case':'New case'; $('editId').value=c?c.id:'';
  $('fPatient').value=c?c.patient:''; $('fAge').value=c?c.age:''; $('fBed').value=c?c.bed:'';
  $('fDiagnosis').value=c?c.diagnosis:''; $('fStatus').value=c?c.status:'Stable';
+ $('fChief').value=c?(c.chief||''):'';
  $('fHistory').value=c?c.history:''; $('fVitals').value=c?c.vitals:''; $('fLabs').value=c?c.labs:''; $('fMeds').value=c?c.meds:''; $('fPlan').value=c?c.plan:'';
+ $('fLabDate').value=c?(c.labDate||''):$('handoverDate').value; $('fLabSex').value=c?(c.labSex||''):'';
+ var ld=(c&&c.labsData)||{}; fillLabs(ld); updateLabUI();
+ document.querySelectorAll('details.labgroup').forEach(function(d){var g=LABS.filter(function(x){return x.g===d.dataset.g})[0]; d.open=g.tests.some(function(t){return ld[t.k]!==undefined&&ld[t.k]!==''});});
+ $('imgRows').innerHTML=(c&&c.imaging&&c.imaging.length?c.imaging.map(imgRow).join(''):'');
  $('endoRows').innerHTML=(c&&c.endos&&c.endos.length?c.endos.map(endoRow).join(''):endoRow());
  $('consultRows').innerHTML=(c&&c.consults&&c.consults.length?c.consults.map(consultRow).join(''):consultRow());
  bindRemove($('formPanel')); $('formPanel').scrollIntoView({behavior:'smooth',block:'start'});
@@ -422,13 +587,24 @@ $('saveCaseBtn').addEventListener('click',function(){
  if(!patient||!diag){toast('Patient code and diagnosis are required'); return;}
  var endos=[]; document.querySelectorAll('.endo-row').forEach(function(r){var f=r.querySelector('.e-find').value.trim(),dt=r.querySelector('.e-date').value; if(f||dt) endos.push({type:r.querySelector('.e-type').value,date:dt,findings:f});});
  var consults=[]; document.querySelectorAll('.consult-row').forEach(function(r){var n=r.querySelector('.c-name').value.trim(),o=r.querySelector('.c-op').value.trim(); if(n||o) consults.push({name:n,spec:r.querySelector('.c-spec').value.trim(),date:r.querySelector('.c-date').value,opinion:o});});
- var data={patient:patient,age:$('fAge').value.trim(),bed:$('fBed').value.trim(),diagnosis:diag,status:$('fStatus').value,history:$('fHistory').value.trim(),vitals:$('fVitals').value.trim(),labs:$('fLabs').value.trim(),meds:$('fMeds').value.trim(),plan:$('fPlan').value.trim(),endos:endos,consults:consults};
+ var imaging=[]; document.querySelectorAll('.img-row').forEach(function(r){var ty=r.querySelector('.i-type').value,f=r.querySelector('.i-find').value.trim(),dt=r.querySelector('.i-date').value; if(ty||f) imaging.push({type:ty,date:dt,findings:f});});
+ var data={patient:patient,age:$('fAge').value.trim(),bed:$('fBed').value.trim(),diagnosis:diag,status:$('fStatus').value,chief:$('fChief').value.trim(),history:$('fHistory').value.trim(),vitals:$('fVitals').value.trim(),labs:$('fLabs').value.trim(),labsData:collectLabs(),labDate:$('fLabDate').value,labSex:$('fLabSex').value,imaging:imaging,meds:$('fMeds').value.trim(),plan:$('fPlan').value.trim(),endos:endos,consults:consults};
  var id=$('editId').value;
  if(id){state.cases=state.cases.map(function(c){return c.id===id?Object.assign({},c,data):c}); toast('Case updated');}
  else{state.cases.push(Object.assign({id:uid(),date:$('handoverDate').value,done:false},data)); toast('Case added to today’s board');}
  saveState(); closeForm(); render();
 });
 
+function flagWord(fl){if(!fl||!fl.txt)return '';return(fl.cls==='H'||fl.cls==='L'||fl.cls==='C')?fl.txt.toUpperCase():fl.txt}
+function labLines(c,abnOnly){
+ var ev=evalLabs(c.labsData,sexFrom(c.age,c.labSex),ageFrom(c.age)),L=[];
+ ev.forEach(function(g){
+  var rows=g.rows.filter(function(r){return !abnOnly||isAbn(r)}); if(!rows.length) return;
+  if(!abnOnly) L.push(g.g.n+':');
+  rows.forEach(function(r){L.push((abnOnly?'':'  ')+r.t.n+': '+r.disp+(r.fl&&r.fl.txt?'  ['+flagWord(r.fl)+']':'')+(abnOnly||!r.ref?'':'  (ref '+r.ref+')'));});
+ });
+ return L;
+}
 function caseFullText(c){
  var L=[];
  L.push('========================================');
@@ -444,14 +620,21 @@ function caseFullText(c){
  L.push('Diagnosis: '+c.diagnosis);
  L.push('Status: '+c.status+(c.done?' — Handed over':' — Pending handover'));
  L.push('');
+ L.push('--- Chief Complaint ---');
+ L.push(c.chief||'—');
+ L.push('');
  L.push('--- Medical History ---');
  L.push(c.history||'—');
  L.push('');
  L.push('--- Vitals ---');
  L.push(c.vitals||'—');
  L.push('');
- L.push('--- Key Labs ---');
- L.push(c.labs||'—');
+ L.push('--- Laboratory Results'+(c.labDate?' ('+c.labDate+')':'')+' ---');
+ var ll=labLines(c,false); if(ll.length) ll.forEach(function(x){L.push(x)}); else L.push('None entered');
+ if(c.labs){L.push('Other labs / notes: '+c.labs);}
+ L.push('');
+ L.push('--- Imaging ---');
+ if(c.imaging&&c.imaging.length){c.imaging.forEach(function(m,i){L.push((i+1)+'. '+(m.type||'Imaging')+(m.date?' — '+m.date:'')+(m.findings?' — '+m.findings:''));});}else{L.push('None recorded');}
  L.push('');
  L.push('--- Medications ---');
  L.push(c.meds||'—');
@@ -472,6 +655,25 @@ function copyTextFallback(txt,ta){
  else toast('Copy not available — select the text manually');
 }
 
+/* Lab + imaging blocks on the case card */
+function labsCardHtml(c){
+ var ev=evalLabs(c.labsData,sexFrom(c.age,c.labSex),ageFrom(c.age)); if(!ev.length) return '';
+ var abn=[]; ev.forEach(function(g){g.rows.forEach(function(r){if(isAbn(r)) abn.push(r);});});
+ var h='<div class="section"><h4>Laboratory results'+(c.labDate?' — '+esc(c.labDate):'')+'</h4>';
+ h+=abn.length?'<div class="abn-chips">'+abn.map(function(r){return '<span class="flag fl-'+r.fl.cls+'">'+esc(shortName(r.t))+' '+esc(r.disp)+' · '+esc(r.fl.txt)+'</span>'}).join('')+'</div>':'<div style="font-size:13px;color:var(--green);font-weight:700;margin:4px 0">All entered results are within the reference range</div>';
+ ev.forEach(function(g){
+  var gAbn=g.rows.filter(isAbn).length;
+  h+='<details class="res-group"'+(gAbn?' open':'')+'><summary><span>'+g.g.ic+' '+esc(g.g.n)+'</span><span class="gcount">'+g.rows.length+' result'+(g.rows.length>1?'s':'')+(gAbn?' · <span class="bad">'+gAbn+' abnormal</span>':'')+'</span></summary><table class="restbl">'+g.rows.map(function(r){
+   return '<tr'+(isAbn(r)?' class="abn"':'')+'><td>'+esc(r.t.n)+(r.ref?'<small>Ref: '+esc(r.ref)+'</small>':'')+'</td><td class="v">'+esc(r.disp)+'</td><td class="fl">'+(r.fl&&r.fl.txt?'<span class="flag fl-'+r.fl.cls+'">'+esc(r.fl.txt)+'</span>':'')+'</td></tr>';
+  }).join('')+'</table></details>';
+ });
+ return h+'</div>';
+}
+function imagingCardHtml(c){
+ if(!c.imaging||!c.imaging.length) return '';
+ return '<div class="section"><h4>Imaging</h4><ul class="list">'+c.imaging.map(function(m){return '<li><b>'+esc(m.type||'Imaging')+'</b>'+(m.date?' — '+esc(m.date):'')+(m.findings?'<br><span dir="auto" style="color:var(--muted);white-space:pre-wrap">'+esc(m.findings)+'</span>':'')+'</li>'}).join('')+'</ul></div>';
+}
+
 /* Cases */
 function todayCases(){return state.cases.filter(function(c){return c.date===$('handoverDate').value});}
 function render(){
@@ -480,7 +682,7 @@ function render(){
    if(state.filter==='pending'&&c.done) return false;
    if(state.filter==='done'&&!c.done) return false;
    if(state.filter==='critical'&&!(c.status==='Critical'||c.status==='Watch')) return false;
-   if(q && !(c.patient+' '+c.diagnosis+' '+c.bed).toLowerCase().includes(q)) return false;
+   if(q && !(c.patient+' '+c.diagnosis+' '+c.bed+' '+(c.chief||'')).toLowerCase().includes(q)) return false;
    return true;});
  $('statTotal').textContent=list.length;
  $('statPending').textContent=list.filter(function(c){return !c.done}).length;
@@ -493,10 +695,12 @@ function render(){
    var cons=c.consults&&c.consults.length?'<div class="section"><h4>Consultants & Opinions</h4><ul class="list">'+c.consults.map(function(x){return '<li><b>'+esc(x.name||'Consultant')+'</b>'+(x.spec?' • '+esc(x.spec):'')+(x.date?' • '+esc(x.date):'')+(x.opinion?'<br>'+esc(x.opinion):'')+'</li>'}).join('')+'</ul></div>':'';
    var armed=deleteArmed['case-'+c.id];
    return '<article class="card"><div class="case-head"><div><div class="case-title">'+esc(c.patient)+' — '+esc(c.diagnosis)+'</div><div class="case-sub">'+esc(c.bed||'')+(c.age?' • '+esc(c.age):'')+'</div></div><div style="display:flex;gap:6px;flex-wrap:wrap"><span class="pill pill-'+c.status+'">'+c.status+'</span>'+(c.done?'<span class="pill pill-done">✓ Handed over</span>':'')+'</div></div>'
-   +(c.history?'<div class="section"><h4>Medical History</h4><p>'+esc(c.history)+'</p></div>':'')
-   +'<div class="meta">'+(c.vitals?'<div><b>Vitals</b><p>'+esc(c.vitals)+'</p></div>':'')+(c.labs?'<div><b>Key Labs</b><p>'+esc(c.labs)+'</p></div>':'')+(c.meds?'<div><b>Medications</b><p>'+esc(c.meds)+'</p></div>':'')+'</div>'
+   +(c.chief?'<div class="section chief"><h4>Chief Complaint</h4><p dir="auto">'+esc(c.chief)+'</p></div>':'')
+   +(c.history?'<div class="section"><h4>Medical History</h4><p dir="auto">'+esc(c.history)+'</p></div>':'')
+   +'<div class="meta">'+(c.vitals?'<div><b>Vitals</b><p>'+esc(c.vitals)+'</p></div>':'')+(c.labs?'<div><b>Other Labs / Notes</b><p dir="auto">'+esc(c.labs)+'</p></div>':'')+(c.meds?'<div><b>Medications</b><p>'+esc(c.meds)+'</p></div>':'')+'</div>'
+   +labsCardHtml(c)+imagingCardHtml(c)
    +endos+cons
-   +(c.plan?'<div class="section"><h4>Plan & Tasks for Next Shift</h4><p>'+esc(c.plan)+'</p></div>':'')
+   +(c.plan?'<div class="section"><h4>Plan & Tasks for Next Shift</h4><p dir="auto">'+esc(c.plan)+'</p></div>':'')
    +'<div class="footer-actions"><button class="btn '+(c.done?'btn-ghost':'btn-primary')+' btn-small" data-toggle-done="'+c.id+'">'+(c.done?'↩ Mark as pending':'✓ Mark handed over')+'</button><button class="btn btn-ghost btn-small" data-edit="'+c.id+'">Edit</button><button class="btn '+(armed?'btn-danger':'btn-ghost')+' btn-small" data-del-case="'+c.id+'">'+(armed?'Tap again to delete':'Delete')+'</button></div>'
    +'<div class="copy-panel"><div class="copy-panel-head"><div><b>Full case — all data in one place</b><span>Everything for this case in one block, ready to copy and send.</span></div><button class="btn btn-primary btn-small" data-copy-case="'+c.id+'">Copy this case</button></div><textarea class="copy-text" readonly data-copy-text="'+c.id+'" aria-label="Full case data for '+esc(c.patient)+'">'+esc(caseFullText(c))+'</textarea><div style="font-size:12px;color:var(--muted);margin-top:6px">Tap the text to select all, or use “Copy this case”.</div></div></article>';
  }).join('');
@@ -505,6 +709,7 @@ function render(){
  document.querySelectorAll('[data-del-case]').forEach(function(b){b.addEventListener('click',function(){var id=b.dataset.delCase; if(deleteArmed['case-'+id]){state.cases=state.cases.filter(function(x){return x.id!==id}); delete deleteArmed['case-'+id]; toast('Case deleted'); saveState(); render();} else {deleteArmed['case-'+id]=1; render(); setTimeout(function(){delete deleteArmed['case-'+id]; render();},3000);}});});
  document.querySelectorAll('[data-copy-case]').forEach(function(b){b.addEventListener('click',function(){var c=state.cases.find(function(x){return x.id===b.dataset.copyCase}); if(!c) return; var ta=document.querySelector('[data-copy-text="'+c.id+'"]'); copyTextFallback(caseFullText(c),ta);});});
  document.querySelectorAll('[data-copy-text]').forEach(function(ta){ta.addEventListener('click',function(){ta.select();}); ta.addEventListener('focus',function(){ta.select();});});
+ /* Keep copy panels fresh if handing-over / receiving doctor changes */
 }
 $('fromDoctor').addEventListener('change',function(){saveState(); render();});
 $('toDoctor').addEventListener('change',function(){saveState(); render();});
@@ -525,9 +730,18 @@ function summaryText(){
  list.forEach(function(c,i){
    lines.push((i+1)+'. '+c.patient+' — '+c.diagnosis+' ['+c.status+']'+(c.done?' (Handed over)':''));
    if(c.bed) lines.push('   Bed/Ward: '+c.bed+(c.age?' | '+c.age:''));
+   if(c.chief) lines.push('   Chief complaint: '+c.chief);
    if(c.history) lines.push('   History: '+c.history);
    if(c.vitals) lines.push('   Vitals: '+c.vitals);
-   if(c.labs) lines.push('   Labs: '+c.labs);
+   var evs=evalLabs(c.labsData,sexFrom(c.age,c.labSex),ageFrom(c.age));
+   if(evs.length){
+     var nAll=0; evs.forEach(function(g){nAll+=g.rows.length});
+     var ab=labLines(c,true);
+     if(ab.length){lines.push('   Abnormal labs'+(c.labDate?' ('+c.labDate+')':'')+' — '+ab.length+' of '+nAll+' entered:'); ab.forEach(function(x){lines.push('     • '+x)});}
+     else lines.push('   Labs'+(c.labDate?' ('+c.labDate+')':'')+': all '+nAll+' entered results within range');
+   }
+   if(c.labs) lines.push('   Other labs: '+c.labs);
+   (c.imaging||[]).forEach(function(m){lines.push('   Imaging: '+(m.type||'')+(m.date?' '+m.date:'')+(m.findings?' — '+m.findings:''));});
    if(c.meds) lines.push('   Meds: '+c.meds);
    (c.endos||[]).forEach(function(e){lines.push('   Endoscopy: '+e.type+(e.date?' '+e.date:'')+(e.findings?' — '+e.findings:''));});
    (c.consults||[]).forEach(function(x){lines.push('   Consultant: '+(x.name||'')+(x.spec?' ('+x.spec+')':'')+(x.opinion?' — '+x.opinion:''));});
@@ -548,10 +762,11 @@ $('copyBtn').addEventListener('click',function(){
  if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(txt).then(function(){toast('Summary copied — paste it to the receiving doctor')},function(){toast('Copy not available — use Download instead')});}
  else{toast('Copy not available — use Download instead');}
 });
+/* Export / Import JSON — one file the receiving doctor can import */
 $('exportJsonBtn').addEventListener('click',function(){
  var list=todayCases();
  if(!list.length){toast('No cases for this day to export yet'); return;}
- var payload={type:'inpatient-handover',version:1,exportedAt:new Date().toISOString(),handoverDate:$('handoverDate').value,fromDoctor:$('fromDoctor').value||'',toDoctor:$('toDoctor').value||'',doctors:state.doctors,cases:list};
+ var payload={type:'inpatient-handover',version:2,exportedAt:new Date().toISOString(),handoverDate:$('handoverDate').value,fromDoctor:$('fromDoctor').value||'',toDoctor:$('toDoctor').value||'',doctors:state.doctors,cases:list};
  var blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'}); var a=document.createElement('a');
  a.href=URL.createObjectURL(blob); a.download='handover-'+$('handoverDate').value+'.json'; document.body.appendChild(a); a.click(); a.remove();
  setTimeout(function(){URL.revokeObjectURL(a.href)},2000); toast('JSON exported — send this file to the receiving doctor');
@@ -578,7 +793,7 @@ $('importFile').addEventListener('change',function(){
      var dup=state.cases.some(function(x){return x.date===cdate&&x.patient===c.patient&&x.diagnosis===c.diagnosis});
      if(dup){skipped++; return;}
      var keepId=c.id&&!state.cases.some(function(x){return x.id===c.id});
-     state.cases.push({id:keepId?c.id:uid(),date:cdate,done:!!c.done,patient:String(c.patient),age:c.age||'',bed:c.bed||'',diagnosis:String(c.diagnosis),status:c.status||'Stable',history:c.history||'',vitals:c.vitals||'',labs:c.labs||'',meds:c.meds||'',plan:c.plan||'',endos:Array.isArray(c.endos)?c.endos:[],consults:Array.isArray(c.consults)?c.consults:[]}); addedCases++;
+     state.cases.push({id:keepId?c.id:uid(),date:cdate,done:!!c.done,patient:String(c.patient),age:c.age||'',bed:c.bed||'',diagnosis:String(c.diagnosis),status:c.status||'Stable',chief:c.chief||'',history:c.history||'',vitals:c.vitals||'',labs:c.labs||'',labsData:(c.labsData&&typeof c.labsData==='object'&&!Array.isArray(c.labsData))?c.labsData:{},labDate:c.labDate||'',labSex:c.labSex||'',imaging:Array.isArray(c.imaging)?c.imaging:[],meds:c.meds||'',plan:c.plan||'',endos:Array.isArray(c.endos)?c.endos:[],consults:Array.isArray(c.consults)?c.consults:[]}); addedCases++;
    });}
    if(d.handoverDate){ $('handoverDate').value=d.handoverDate; $('dateLabel').textContent=fmtDate(d.handoverDate); }
    renderDoctors();
