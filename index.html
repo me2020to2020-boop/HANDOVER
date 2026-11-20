@@ -13,7 +13,7 @@
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 <link rel="icon" type="image/png" href="icons/icon-192.png">
-<title>Inpatient Handover Installable</title>
+<title>Inpatient Handover</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,700&family=Public+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
@@ -66,7 +66,7 @@ textarea{min-height:84px;resize:vertical}
 .rowline{display:grid;grid-template-columns:1fr 1fr 2fr auto;gap:8px;align-items:end;margin-top:8px}
 .rowline2{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
 .doctor{display:flex;justify-content:space-between;align-items:center;gap:10px;border-top:1px solid var(--line);padding:11px 0}.doctor:first-child{border-top:0}
-.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:18px;background:var(--ink);color:var(--bg);padding:11px 16px;border-radius:999px;font-weight:700;font-size:14px;display:none;z-index:20;box-shadow:0 10px 30px rgba(0,0,0,.25);max-width:92vw;text-align:center}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:18px;background:var(--ink);color:var(--bg);padding:11px 16px;border-radius:999px;font-weight:700;font-size:14px;display:none;z-index:50;box-shadow:0 10px 30px rgba(0,0,0,.25);max-width:92vw;text-align:center}
 .toast.show{display:block}
 .install-steps{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .step{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:16px}.step h3{margin:0 0 8px}.step ol{margin:0;padding-left:20px;color:var(--muted);font-size:14px}.step ol b{color:var(--ink)}
@@ -78,11 +78,38 @@ textarea{min-height:84px;resize:vertical}
 .copy-panel-head b{font-size:14px}.copy-panel-head span{display:block;font-size:12px;color:var(--muted);font-weight:500}
 .copy-text{width:100%;min-height:210px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:13px;line-height:1.65;background:var(--surface);white-space:pre-wrap;resize:vertical}
 details summary{cursor:pointer;font-weight:700;padding:8px 0;min-height:36px}
+.user-bar{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:8px 14px;margin-bottom:10px;font-size:13px}
+.user-bar .sync-dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--green);margin-right:6px}
+.auth-overlay{position:fixed;inset:0;background:var(--bg);z-index:40;display:flex;align-items:center;justify-content:center;padding:16px}
+.auth-card{background:var(--surface);border:1px solid var(--line);border-radius:22px;padding:28px 24px;width:100%;max-width:400px;box-shadow:var(--shadow)}
+.auth-card h2{font-family:"Fraunces",serif;margin:6px 0 6px;font-size:26px}
+.auth-card p{color:var(--muted);font-size:14px;margin:0 0 18px}
+.auth-err{background:var(--redBg);color:var(--red);padding:10px 12px;border-radius:10px;font-size:13px;font-weight:600;margin-bottom:12px;display:none}
 @media(max-width:760px){.hero h1{font-size:29px}.stats{grid-template-columns:1fr 1fr}.grid2,.grid3,.install-steps{grid-template-columns:1fr}.meta{grid-template-columns:1fr}.rowline{grid-template-columns:1fr}.rowline2{grid-template-columns:1fr}.wrap{padding:14px 12px 80px}}
 </style>
 </head>
 <body>
-<div class="wrap">
+
+<div id="authOverlay" class="auth-overlay">
+  <div class="auth-card">
+    <div class="kicker">Internal Medicine • Handover</div>
+    <h2>Team Sign In</h2>
+    <p>Sign in with your department account to view and sync inpatient handovers.</p>
+    <div id="authErr" class="auth-err"></div>
+    <form id="loginForm">
+      <label class="f" style="margin-bottom:12px"><span>Email</span><input type="email" id="loginEmail" required autocomplete="email" placeholder="doctor@hospital.com"></label>
+      <label class="f" style="margin-bottom:16px"><span>Password</span><input type="password" id="loginPass" required autocomplete="current-password" placeholder="••••••••"></label>
+      <button type="submit" class="btn btn-primary" id="loginBtn" style="width:100%">Sign in</button>
+    </form>
+  </div>
+</div>
+
+<div class="wrap" id="appWrap" style="display:none">
+  <div class="user-bar">
+    <div><span class="sync-dot" id="syncDot"></span><b id="userEmailLabel">Signed in</b> · <span id="syncLabel" style="color:var(--muted)">Connecting…</span></div>
+    <button class="btn btn-ghost btn-small" id="signOutBtn">Sign out</button>
+  </div>
+
   <div class="hero">
     <div>
       <div class="kicker">Internal Medicine • Daily Handover</div>
@@ -114,7 +141,7 @@ details summary{cursor:pointer;font-weight:700;padding:8px 0;min-height:36px}
       <button class="btn btn-ghost" id="importJsonBtn">Import JSON</button>
       <input type="file" id="importFile" accept=".json,application/json" hidden>
     </div>
-    <div id="saveStatus" style="font-size:13px;color:var(--muted);margin-top:10px">Autosaves on this phone as you work — close and reopen, and your cases are still here. Send the day to the receiving doctor with Export JSON.</div>
+    <div id="saveStatus" style="font-size:13px;color:var(--muted);margin-top:10px">Cloud sync active — changes sync automatically across all signed-in team devices.</div>
     <div id="formPanel" class="form-panel">
       <hr style="border:0;border-top:1px solid var(--line);margin:16px 0">
       <h2 style="margin:0 0 10px;font-size:20px" id="formTitle">New case</h2>
@@ -184,29 +211,157 @@ details summary{cursor:pointer;font-weight:700;padding:8px 0;min-height:36px}
   </section>
 
   <section id="view-install" style="display:none">
-    <div class="note" style="margin-bottom:12px"><b>About this installable version:</b> It opens from its own home-screen icon and works like an app. Your doctors, cases, handover date and handing-over / receiving selections are <b>autosaved on this phone</b> as you work, so closing the app or refreshing no longer loses them — reopen it and everything is restored. Data stays on that phone only: it does <b>not</b> sync between doctors’ phones. To hand over to another doctor, tap <b>Export JSON</b> and send that one file (for example on WhatsApp) — the receiving doctor opens this same link on their phone and taps <b>Import JSON</b> to load the full day without retyping. You can also <b>Download handover sheet</b> (.txt) or <b>Copy summary</b> when you just need a readable copy.</div>
+    <div class="note" style="margin-bottom:12px"><b>Cloud-Synced Team App:</b> All cases and doctors are protected by password login and synced automatically in real time across signed-in devices. It also works offline and syncs when your connection returns. You can still use <b>Export JSON</b>, <b>Download handover sheet</b> (.txt), or <b>Copy summary</b> anytime for backups or sharing.</div>
     <div class="install-steps">
       <div class="step"><h3>📱 Android — Chrome</h3><ol><li>Open this page in <b>Chrome</b>.</li><li>Tap the <b>⋮ menu</b> (top right).</li><li>Tap <b>Install app</b> or <b>Add to Home screen</b>.</li><li>Tap <b>Install / Add</b> — an icon appears on your home screen.</li><li>Open it from the icon: it launches full-screen, like a separate app.</li></ol></div>
       <div class="step"><h3>🍎 iPhone — Safari</h3><ol><li>Open this page in <b>Safari</b>.</li><li>Tap the <b>Share</b> button.</li><li>Scroll and tap <b>Add to Home Screen</b>.</li><li>Name it <b>Handover</b> and tap <b>Add</b>.</li><li>Open it from your home screen icon.</li></ol></div>
     </div>
-    <div class="card"><h3 style="margin-top:0">Daily routine (about 6 cases)</h3><ol style="color:var(--muted);font-size:14px;padding-left:20px"><li style="margin:6px 0"><b style="color:var(--ink)">Morning:</b> Add the day’s doctors if they’re new — doctors and cases are autosaved on this phone, so they’re still here if you close and reopen the app. Then add each case with history & endoscopies.</li><li style="margin:6px 0"><b style="color:var(--ink)">During the day:</b> Add each consultant’s opinion as reviews happen.</li><li style="margin:6px 0"><b style="color:var(--ink)">Handover:</b> Pick handing-over & receiving doctors, mark each case handed over, then tap <b style="color:var(--ink)">Export JSON</b> and send that one file to the receiving doctor — they open this same link and tap <b style="color:var(--ink)">Import JSON</b> to load the cases. Or download / copy the sheet for a readable copy.</li><li style="margin:6px 0"><b style="color:var(--ink)">Next day:</b> Use “Carry unfinished to tomorrow” for cases that stay.</li></ol></div>
   </section>
 </div>
 <div class="toast" id="toast"></div>
 
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+
 <script>
+const firebaseConfig = {
+  apiKey: "AIzaSyC_w_wWtIwkyiPJbYOnoY23qY_tft3SOQs",
+  authDomain: "handover-d6cfb.firebaseapp.com",
+  projectId: "handover-d6cfb",
+  storageBucket: "handover-d6cfb.firebasestorage.app",
+  messagingSenderId: "234241266308",
+  appId: "1:234241266308:web:208185ac2cfe97f51368d1"
+};
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const db = firebase.firestore();
+db.enablePersistence({ synchronizeTabs: true }).catch(function(){});
+
 var STORAGE_KEY='inpatient-handover-autosave-v1';
 var state={doctors:[],cases:[],filter:'all'};
 var deleteArmed={};
+var currentUser=null;
+var unsubCloud=null;
+var cloudDocRef=db.collection('handover').doc('shared');
+
 function $(id){return document.getElementById(id)}
 function esc(s){return String(s||'').replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
 function toast(msg){var t=$('toast');t.textContent=msg;t.classList.add('show');setTimeout(function(){t.classList.remove('show')},2600)}
 function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,7)}
 function fmtDate(v){try{return new Date(v+'T12:00:00').toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long',year:'numeric'})}catch(e){return v}}
-/* Autosave on this phone (localStorage) */
-function saveState(){try{var payload={doctors:state.doctors,cases:state.cases,handoverDate:$('handoverDate').value,fromDoctor:$('fromDoctor').value,toDoctor:$('toDoctor').value,savedAt:new Date().toISOString()};localStorage.setItem(STORAGE_KEY,JSON.stringify(payload));var el=$('saveStatus');if(el){el.textContent='✓ Autosaved on this phone · '+new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'})+' — close and reopen, and your cases are still here.';}}catch(e){}}
-function loadState(){try{var raw=localStorage.getItem(STORAGE_KEY);if(!raw)return;var d=JSON.parse(raw);if(!d)return;if(Array.isArray(d.doctors))state.doctors=d.doctors;if(Array.isArray(d.cases))state.cases=d.cases;if(d.handoverDate){$('handoverDate').value=d.handoverDate;$('dateLabel').textContent=fmtDate(d.handoverDate);}state._pendingFrom=d.fromDoctor||'';state._pendingTo=d.toDoctor||'';}catch(e){}}
-$('handoverDate').addEventListener('change',function(){ $('dateLabel').textContent=fmtDate(this.value); saveState(); render(); });
+
+/* Set today's date by default if none saved */
+(function initToday(){
+  var today = new Date().toISOString().slice(0,10);
+  $('handoverDate').value = today;
+  $('dateLabel').textContent = fmtDate(today);
+})();
+
+/* Local cache + Cloud Sync */
+function saveLocal(){
+  try{
+    var payload={doctors:state.doctors,cases:state.cases,handoverDate:$('handoverDate').value,fromDoctor:$('fromDoctor').value,toDoctor:$('toDoctor').value,savedAt:new Date().toISOString()};
+    localStorage.setItem(STORAGE_KEY,JSON.stringify(payload));
+  }catch(e){}
+}
+function saveState(){
+  saveLocal();
+  if(!currentUser) return;
+  $('syncLabel').textContent='Saving…';
+  cloudDocRef.set({
+    doctors: state.doctors,
+    cases: state.cases,
+    fromDoctor: $('fromDoctor').value || '',
+    toDoctor: $('toDoctor').value || '',
+    updatedAt: new Date().toISOString(),
+    updatedBy: currentUser.email || ''
+  }, { merge: true }).then(function(){
+    var t = new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
+    $('syncLabel').textContent='Synced · '+t;
+    $('saveStatus').textContent='✓ Synced to cloud · '+t+' — all signed-in team devices are up to date.';
+  }).catch(function(err){
+    $('syncLabel').textContent='Offline (saved locally)';
+    $('saveStatus').textContent='Saved locally — will sync automatically when back online.';
+  });
+}
+function loadState(){
+  try{
+    var raw=localStorage.getItem(STORAGE_KEY);if(!raw)return;
+    var d=JSON.parse(raw);if(!d)return;
+    if(Array.isArray(d.doctors))state.doctors=d.doctors;
+    if(Array.isArray(d.cases))state.cases=d.cases;
+    if(d.handoverDate){$('handoverDate').value=d.handoverDate;$('dateLabel').textContent=fmtDate(d.handoverDate);}
+    state._pendingFrom=d.fromDoctor||'';state._pendingTo=d.toDoctor||'';
+  }catch(e){}
+}
+
+/* Auth handling */
+$('loginForm').addEventListener('submit', function(e){
+  e.preventDefault();
+  var email = $('loginEmail').value.trim();
+  var pass = $('loginPass').value;
+  var errEl = $('authErr');
+  errEl.style.display = 'none';
+  $('loginBtn').disabled = true;
+  $('loginBtn').textContent = 'Signing in…';
+  auth.signInWithEmailAndPassword(email, pass).catch(function(err){
+    errEl.textContent = 'Invalid email or password. Please try again.';
+    errEl.style.display = 'block';
+    $('loginBtn').disabled = false;
+    $('loginBtn').textContent = 'Sign in';
+  });
+});
+
+$('signOutBtn').addEventListener('click', function(){
+  if(unsubCloud){ unsubCloud(); unsubCloud = null; }
+  auth.signOut();
+});
+
+auth.onAuthStateChanged(function(user){
+  currentUser = user;
+  if(user){
+    $('authOverlay').style.display = 'none';
+    $('appWrap').style.display = 'block';
+    $('userEmailLabel').textContent = user.email;
+    $('loginBtn').disabled = false;
+    $('loginBtn').textContent = 'Sign in';
+    startCloudSync();
+  } else {
+    $('authOverlay').style.display = 'flex';
+    $('appWrap').style.display = 'none';
+    if(unsubCloud){ unsubCloud(); unsubCloud = null; }
+  }
+});
+
+function startCloudSync(){
+  if(unsubCloud) unsubCloud();
+  $('syncLabel').textContent = 'Syncing…';
+  unsubCloud = cloudDocRef.onSnapshot(function(doc){
+    if(doc.exists){
+      var d = doc.data();
+      if(Array.isArray(d.doctors)) state.doctors = d.doctors;
+      if(Array.isArray(d.cases)) state.cases = d.cases;
+      renderDoctors();
+      if(typeof d.fromDoctor === 'string') $('fromDoctor').value = d.fromDoctor;
+      if(typeof d.toDoctor === 'string') $('toDoctor').value = d.toDoctor;
+      saveLocal();
+      render();
+      var t = new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
+      $('syncLabel').textContent = 'Live sync · ' + t;
+      $('saveStatus').textContent = '✓ Synced with cloud · ' + t + (d.updatedBy ? ' (last edit: ' + d.updatedBy + ')' : '');
+    } else {
+      /* First time cloud is empty: push any existing local data */
+      if(state.doctors.length || state.cases.length){ saveState(); }
+      else { $('syncLabel').textContent = 'Live sync ready'; }
+    }
+  }, function(err){
+    $('syncLabel').textContent = 'Offline mode';
+    toast('Cloud sync error: check connection or Firestore rules');
+  });
+}
+
+$('handoverDate').addEventListener('change',function(){ $('dateLabel').textContent=fmtDate(this.value); saveLocal(); render(); });
 
 /* Tabs */
 document.querySelectorAll('.tab').forEach(function(b){b.addEventListener('click',function(){
@@ -350,7 +505,6 @@ function render(){
  document.querySelectorAll('[data-del-case]').forEach(function(b){b.addEventListener('click',function(){var id=b.dataset.delCase; if(deleteArmed['case-'+id]){state.cases=state.cases.filter(function(x){return x.id!==id}); delete deleteArmed['case-'+id]; toast('Case deleted'); saveState(); render();} else {deleteArmed['case-'+id]=1; render(); setTimeout(function(){delete deleteArmed['case-'+id]; render();},3000);}});});
  document.querySelectorAll('[data-copy-case]').forEach(function(b){b.addEventListener('click',function(){var c=state.cases.find(function(x){return x.id===b.dataset.copyCase}); if(!c) return; var ta=document.querySelector('[data-copy-text="'+c.id+'"]'); copyTextFallback(caseFullText(c),ta);});});
  document.querySelectorAll('[data-copy-text]').forEach(function(ta){ta.addEventListener('click',function(){ta.select();}); ta.addEventListener('focus',function(){ta.select();});});
- /* Keep copy panels fresh if handing-over / receiving doctor changes */
 }
 $('fromDoctor').addEventListener('change',function(){saveState(); render();});
 $('toDoctor').addEventListener('change',function(){saveState(); render();});
@@ -394,7 +548,6 @@ $('copyBtn').addEventListener('click',function(){
  if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(txt).then(function(){toast('Summary copied — paste it to the receiving doctor')},function(){toast('Copy not available — use Download instead')});}
  else{toast('Copy not available — use Download instead');}
 });
-/* Export / Import JSON — one file the receiving doctor can import */
 $('exportJsonBtn').addEventListener('click',function(){
  var list=todayCases();
  if(!list.length){toast('No cases for this day to export yet'); return;}
