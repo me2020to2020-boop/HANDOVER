@@ -1,0 +1,448 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#0f766e">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Handover">
+<link rel="icon" href="data:,">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="icon" type="image/png" href="icons/icon-192.png">
+<title>Inpatient Handover Installable</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,700&family=Public+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f4f6f5;--surface:#ffffff;--surface2:#eef3f1;--ink:#13211e;--muted:#5b6d68;--line:#dbe4e0;--teal:#0f766e;--teal2:#0b5e57;--amber:#b45309;--amberBg:#fef3c7;--red:#b91c1c;--redBg:#fee2e2;--green:#15803d;--greenBg:#dcfce7;--blue:#1d4ed8;--blueBg:#dbeafe;--radius:18px;--shadow:0 8px 30px rgba(15,40,35,.08)}
+@media(prefers-color-scheme:dark){:root{--bg:#0d1513;--surface:#16211e;--surface2:#1c2a26;--ink:#e8f0ed;--muted:#9db3ac;--line:#2a3d37;--shadow:0 8px 30px rgba(0,0,0,.35);--amberBg:#3a2a0a;--redBg:#3a1414;--greenBg:#14331e;--blueBg:#162a52}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:"Public Sans",system-ui,-apple-system,Segoe UI,Roboto,sans-serif;line-height:1.5}
+a{color:var(--teal)}button,input,select,textarea{font:inherit}button{min-height:44px}
+.wrap{max-width:1080px;margin:0 auto;padding:18px 16px 90px}
+.hero{display:flex;gap:16px;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;padding:8px 0 14px}
+.hero h1{font-family:"Fraunces",serif;font-size:34px;line-height:.95;letter-spacing:-.02em;margin:6px 0 8px;max-width:520px}
+.hero p{color:var(--muted);margin:0;max-width:560px;font-size:15px}
+.kicker{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--teal);font-weight:800}
+.datebox{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:10px 12px;min-width:210px;box-shadow:var(--shadow)}
+.datebox label{font-size:12px;font-weight:700;color:var(--muted);display:block;margin-bottom:4px}
+.datebox input{width:100%;border:0;background:transparent;color:var(--ink);font-weight:700;font-size:16px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:12px 0}
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:14px}
+.stat b{font-size:28px;display:block;line-height:1}.stat span{font-size:13px;color:var(--muted)}
+.toolbar{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:14px;box-shadow:var(--shadow)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}.grid3{display:grid;grid-template-columns:1.2fr .8fr .8fr;gap:10px}
+label.f{font-size:13px;font-weight:700;display:block}label.f span{display:block;color:var(--muted);font-weight:500;font-size:12px;margin-bottom:5px}
+input,select,textarea{width:100%;padding:11px 12px;border:1px solid var(--line);border-radius:11px;background:var(--surface);color:var(--ink)}
+textarea{min-height:84px;resize:vertical}
+.btn{border:0;border-radius:999px;padding:11px 16px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:44px}
+.btn-primary{background:var(--teal);color:#fff}.btn-primary:hover{background:var(--teal2)}
+.btn-ghost{background:var(--surface2);color:var(--ink);border:1px solid var(--line)}
+.btn-danger{background:var(--redBg);color:var(--red);border:1px solid #fecaca}
+.btn-small{padding:8px 12px;min-height:38px;font-size:13px}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:18px 0 12px}
+.tab{border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:999px;padding:9px 14px;font-weight:700;cursor:pointer}
+.tab.active{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}
+.chip{border:1px solid var(--line);background:transparent;color:var(--muted);border-radius:999px;padding:7px 12px;cursor:pointer;font-weight:600;min-height:36px}
+.chip.active{background:var(--teal);color:#fff;border-color:var(--teal)}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:16px;margin:12px 0;box-shadow:var(--shadow)}
+.case-head{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.case-title{font-weight:800;font-size:18px}.case-sub{color:var(--muted);font-size:13px}
+.pill{font-size:12px;font-weight:800;padding:5px 9px;border-radius:999px;white-space:nowrap}
+.pill-Stable{background:var(--greenBg);color:var(--green)}.pill-Watch{background:var(--amberBg);color:var(--amber)}.pill-Critical{background:var(--redBg);color:var(--red)}.pill-Improving{background:var(--blueBg);color:var(--blue)}
+.pill-done{background:var(--ink);color:var(--bg)}
+.meta{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:12px 0}
+.meta div{background:var(--surface2);border-radius:12px;padding:10px}.meta b{font-size:12px;color:var(--muted);display:block;text-transform:uppercase;letter-spacing:.06em}.meta p{margin:3px 0 0;font-size:14px;white-space:pre-wrap}
+.section{margin-top:12px}.section h4{margin:0 0 6px;font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--teal)}
+.section p{margin:0;white-space:pre-wrap;font-size:14px}
+.list{margin:0;padding:0;list-style:none}.list li{border-top:1px solid var(--line);padding:9px 0;font-size:14px}.list li:first-child{border-top:0}
+.empty{border:1.5px dashed var(--line);border-radius:var(--radius);padding:28px 18px;text-align:center;background:var(--surface)}
+.empty h3{margin:0 0 6px;font-size:20px}.empty p{color:var(--muted);margin:0 auto;max-width:520px}
+.form-panel{display:none}.form-panel.open{display:block}
+.subform{background:var(--surface2);border-radius:14px;padding:12px;margin:10px 0}
+.rowline{display:grid;grid-template-columns:1fr 1fr 2fr auto;gap:8px;align-items:end;margin-top:8px}
+.rowline2{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+.doctor{display:flex;justify-content:space-between;align-items:center;gap:10px;border-top:1px solid var(--line);padding:11px 0}.doctor:first-child{border-top:0}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:18px;background:var(--ink);color:var(--bg);padding:11px 16px;border-radius:999px;font-weight:700;font-size:14px;display:none;z-index:20;box-shadow:0 10px 30px rgba(0,0,0,.25);max-width:92vw;text-align:center}
+.toast.show{display:block}
+.install-steps{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.step{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:16px}.step h3{margin:0 0 8px}.step ol{margin:0;padding-left:20px;color:var(--muted);font-size:14px}.step ol b{color:var(--ink)}
+.note{background:#fffbeb;border:1px solid #fde68a;color:#92400e;border-radius:14px;padding:13px 14px;font-size:14px}
+@media(prefers-color-scheme:dark){.note{background:#2a2008;color:#fcd34d;border-color:#6b4e0a}}
+.footer-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.copy-panel{margin-top:16px;border:1.5px dashed var(--line);background:var(--surface2);border-radius:14px;padding:12px}
+.copy-panel-head{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:8px}
+.copy-panel-head b{font-size:14px}.copy-panel-head span{display:block;font-size:12px;color:var(--muted);font-weight:500}
+.copy-text{width:100%;min-height:210px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:13px;line-height:1.65;background:var(--surface);white-space:pre-wrap;resize:vertical}
+details summary{cursor:pointer;font-weight:700;padding:8px 0;min-height:36px}
+@media(max-width:760px){.hero h1{font-size:29px}.stats{grid-template-columns:1fr 1fr}.grid2,.grid3,.install-steps{grid-template-columns:1fr}.meta{grid-template-columns:1fr}.rowline{grid-template-columns:1fr}.rowline2{grid-template-columns:1fr}.wrap{padding:14px 12px 80px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="hero">
+    <div>
+      <div class="kicker">Internal Medicine • Daily Handover</div>
+      <h1>Hand over today’s inpatients, clearly and completely.</h1>
+      <p>For about 6 cases a day — with medical history, previous endoscopies, consultants’ opinions, and the doctors handing over and receiving.</p>
+    </div>
+    <div class="datebox"><label for="handoverDate">Handover date</label><input type="date" id="handoverDate" value="2026-11-20"><div style="font-size:13px;color:var(--muted);margin-top:4px" id="dateLabel">Friday, 20 November 2026</div></div>
+  </div>
+
+  <div class="stats">
+    <div class="stat"><b id="statTotal">0</b><span>Cases today</span></div>
+    <div class="stat"><b id="statPending">0</b><span>Pending handover</span></div>
+    <div class="stat"><b id="statDone">0</b><span>Handed over</span></div>
+    <div class="stat"><b id="statCritical">0</b><span>Critical / Watch</span></div>
+  </div>
+
+  <div class="toolbar">
+    <div class="grid3">
+      <label class="f"><span>Search cases</span><input id="search" placeholder="Bed, diagnosis, patient code…"></label>
+      <label class="f"><span>Handing over — doctor</span><select id="fromDoctor"><option value="">Select doctor…</option></select></label>
+      <label class="f"><span>Receiving — doctor</span><select id="toDoctor"><option value="">Select doctor…</option></select></label>
+    </div>
+    <div class="footer-actions">
+      <button class="btn btn-primary" id="toggleFormBtn">+ Add a case</button>
+      <button class="btn btn-ghost" id="carryBtn">Carry unfinished to tomorrow →</button>
+      <button class="btn btn-ghost" id="downloadBtn">Download handover sheet</button>
+      <button class="btn btn-ghost" id="copyBtn">Copy summary</button>
+      <button class="btn btn-ghost" id="exportJsonBtn">Export JSON</button>
+      <button class="btn btn-ghost" id="importJsonBtn">Import JSON</button>
+      <input type="file" id="importFile" accept=".json,application/json" hidden>
+    </div>
+    <div id="saveStatus" style="font-size:13px;color:var(--muted);margin-top:10px">Autosaves on this phone as you work — close and reopen, and your cases are still here. Send the day to the receiving doctor with Export JSON.</div>
+    <div id="formPanel" class="form-panel">
+      <hr style="border:0;border-top:1px solid var(--line);margin:16px 0">
+      <h2 style="margin:0 0 10px;font-size:20px" id="formTitle">New case</h2>
+      <input type="hidden" id="editId">
+      <div class="grid3">
+        <label class="f"><span>Patient code / initials *</span><input id="fPatient" placeholder="e.g. A.M. — Bed 12"></label>
+        <label class="f"><span>Age / Sex</span><input id="fAge" placeholder="e.g. 62 / M"></label>
+        <label class="f"><span>Bed / Ward</span><input id="fBed" placeholder="e.g. Ward 3 — Bed 12"></label>
+      </div>
+      <div class="grid2" style="margin-top:10px">
+        <label class="f"><span>Main diagnosis *</span><input id="fDiagnosis" placeholder="e.g. Upper GI bleed"></label>
+        <label class="f"><span>Status</span><select id="fStatus"><option>Stable</option><option>Watch</option><option>Critical</option><option>Improving</option></select></label>
+      </div>
+      <label class="f" style="margin-top:10px"><span>Medical history</span><textarea id="fHistory" placeholder="Past medical & surgical history, allergies, relevant background…"></textarea></label>
+      <div class="grid3" style="margin-top:10px">
+        <label class="f"><span>Vitals</span><input id="fVitals" placeholder="BP, HR, SpO₂, Temp"></label>
+        <label class="f"><span>Key labs</span><input id="fLabs" placeholder="Hb, CRP, creatinine…"></label>
+        <label class="f"><span>Medications</span><input id="fMeds" placeholder="Current key meds"></label>
+      </div>
+      <label class="f" style="margin-top:10px"><span>Plan & tasks for next shift</span><textarea id="fPlan" placeholder="What to check, repeat labs, reviews, escalation plan…"></textarea></label>
+
+      <div class="subform">
+        <b>Previous endoscopies</b><div style="font-size:13px;color:var(--muted)">Gastroscopy • Colonoscopy • ERCP</div>
+        <div id="endoRows"></div>
+        <button class="btn btn-ghost btn-small" id="addEndoBtn" style="margin-top:10px">+ Add endoscopy</button>
+      </div>
+      <div class="subform">
+        <b>Consultants & their opinion</b>
+        <div id="consultRows"></div>
+        <button class="btn btn-ghost btn-small" id="addConsultBtn" style="margin-top:10px">+ Add consultant</button>
+      </div>
+      <div class="footer-actions">
+        <button class="btn btn-primary" id="saveCaseBtn">Save case</button>
+        <button class="btn btn-ghost" id="cancelFormBtn">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="tabs" role="tablist">
+    <button class="tab active" data-tab="board">Today’s Board</button>
+    <button class="tab" data-tab="doctors">Department Doctors</button>
+    <button class="tab" data-tab="install">Install on Mobile</button>
+  </div>
+
+  <section id="view-board">
+    <div class="chips" id="filterChips">
+      <button class="chip active" data-filter="all">All</button>
+      <button class="chip" data-filter="pending">Pending</button>
+      <button class="chip" data-filter="done">Handed over</button>
+      <button class="chip" data-filter="critical">Critical / Watch</button>
+    </div>
+    <div id="caseList"></div>
+  </section>
+
+  <section id="view-doctors" style="display:none">
+    <div class="card">
+      <h2 style="margin:0 0 4px;font-size:20px">Department doctors</h2>
+      <p style="color:var(--muted);margin:0 0 12px;font-size:14px">Add your team once — names appear in the handing-over / receiving lists above.</p>
+      <div class="grid3">
+        <label class="f"><span>Doctor name *</span><input id="dName" placeholder="e.g. Dr. Ahmed Samy"></label>
+        <label class="f"><span>Role / Title</span><select id="dRole"><option>Consultant</option><option>Specialist</option><option>Assistant Lecturer</option><option>Resident</option><option>Other</option></select></label>
+        <label class="f"><span>Specialty</span><input id="dSpec" placeholder="Internal Medicine, GI…"></label>
+      </div>
+      <button class="btn btn-primary" id="addDoctorBtn" style="margin-top:12px">Add doctor</button>
+      <div id="doctorList" style="margin-top:8px"></div>
+    </div>
+  </section>
+
+  <section id="view-install" style="display:none">
+    <div class="note" style="margin-bottom:12px"><b>About this installable version:</b> It opens from its own home-screen icon and works like an app. Your doctors, cases, handover date and handing-over / receiving selections are <b>autosaved on this phone</b> as you work, so closing the app or refreshing no longer loses them — reopen it and everything is restored. Data stays on that phone only: it does <b>not</b> sync between doctors’ phones. To hand over to another doctor, tap <b>Export JSON</b> and send that one file (for example on WhatsApp) — the receiving doctor opens this same link on their phone and taps <b>Import JSON</b> to load the full day without retyping. You can also <b>Download handover sheet</b> (.txt) or <b>Copy summary</b> when you just need a readable copy.</div>
+    <div class="install-steps">
+      <div class="step"><h3>📱 Android — Chrome</h3><ol><li>Open this page in <b>Chrome</b>.</li><li>Tap the <b>⋮ menu</b> (top right).</li><li>Tap <b>Install app</b> or <b>Add to Home screen</b>.</li><li>Tap <b>Install / Add</b> — an icon appears on your home screen.</li><li>Open it from the icon: it launches full-screen, like a separate app.</li></ol></div>
+      <div class="step"><h3>🍎 iPhone — Safari</h3><ol><li>Open this page in <b>Safari</b>.</li><li>Tap the <b>Share</b> button.</li><li>Scroll and tap <b>Add to Home Screen</b>.</li><li>Name it <b>Handover</b> and tap <b>Add</b>.</li><li>Open it from your home screen icon.</li></ol></div>
+    </div>
+    <div class="card"><h3 style="margin-top:0">Daily routine (about 6 cases)</h3><ol style="color:var(--muted);font-size:14px;padding-left:20px"><li style="margin:6px 0"><b style="color:var(--ink)">Morning:</b> Add the day’s doctors if they’re new — doctors and cases are autosaved on this phone, so they’re still here if you close and reopen the app. Then add each case with history & endoscopies.</li><li style="margin:6px 0"><b style="color:var(--ink)">During the day:</b> Add each consultant’s opinion as reviews happen.</li><li style="margin:6px 0"><b style="color:var(--ink)">Handover:</b> Pick handing-over & receiving doctors, mark each case handed over, then tap <b style="color:var(--ink)">Export JSON</b> and send that one file to the receiving doctor — they open this same link and tap <b style="color:var(--ink)">Import JSON</b> to load the cases. Or download / copy the sheet for a readable copy.</li><li style="margin:6px 0"><b style="color:var(--ink)">Next day:</b> Use “Carry unfinished to tomorrow” for cases that stay.</li></ol></div>
+  </section>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+var STORAGE_KEY='inpatient-handover-autosave-v1';
+var state={doctors:[],cases:[],filter:'all'};
+var deleteArmed={};
+function $(id){return document.getElementById(id)}
+function esc(s){return String(s||'').replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+function toast(msg){var t=$('toast');t.textContent=msg;t.classList.add('show');setTimeout(function(){t.classList.remove('show')},2600)}
+function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,7)}
+function fmtDate(v){try{return new Date(v+'T12:00:00').toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long',year:'numeric'})}catch(e){return v}}
+/* Autosave on this phone (localStorage) */
+function saveState(){try{var payload={doctors:state.doctors,cases:state.cases,handoverDate:$('handoverDate').value,fromDoctor:$('fromDoctor').value,toDoctor:$('toDoctor').value,savedAt:new Date().toISOString()};localStorage.setItem(STORAGE_KEY,JSON.stringify(payload));var el=$('saveStatus');if(el){el.textContent='✓ Autosaved on this phone · '+new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'})+' — close and reopen, and your cases are still here.';}}catch(e){}}
+function loadState(){try{var raw=localStorage.getItem(STORAGE_KEY);if(!raw)return;var d=JSON.parse(raw);if(!d)return;if(Array.isArray(d.doctors))state.doctors=d.doctors;if(Array.isArray(d.cases))state.cases=d.cases;if(d.handoverDate){$('handoverDate').value=d.handoverDate;$('dateLabel').textContent=fmtDate(d.handoverDate);}state._pendingFrom=d.fromDoctor||'';state._pendingTo=d.toDoctor||'';}catch(e){}}
+$('handoverDate').addEventListener('change',function(){ $('dateLabel').textContent=fmtDate(this.value); saveState(); render(); });
+
+/* Tabs */
+document.querySelectorAll('.tab').forEach(function(b){b.addEventListener('click',function(){
+ document.querySelectorAll('.tab').forEach(function(x){x.classList.remove('active')}); b.classList.add('active');
+ ['board','doctors','install'].forEach(function(v){$('view-'+v).style.display=(v===b.dataset.tab?'block':'none')});
+})});
+document.querySelectorAll('#filterChips .chip').forEach(function(c){c.addEventListener('click',function(){document.querySelectorAll('#filterChips .chip').forEach(function(x){x.classList.remove('active')});c.classList.add('active');state.filter=c.dataset.filter;render();})});
+$('search').addEventListener('input',render);
+
+/* Doctors */
+function renderDoctors(){
+ var selOpts='<option value="">Select doctor…</option>'+state.doctors.map(function(d){return '<option>'+esc(d.name)+'</option>'}).join('');
+ var curF=$('fromDoctor').value, curT=$('toDoctor').value;
+ $('fromDoctor').innerHTML=selOpts; $('toDoctor').innerHTML=selOpts;
+ if(curF) $('fromDoctor').value=curF; if(curT) $('toDoctor').value=curT;
+ if(!state.doctors.length){$('doctorList').innerHTML='<div class="empty" style="margin-top:14px"><h3>No doctors yet</h3><p>Add your department doctors here — consultants, specialists and residents. Their names will appear in the handover lists.</p></div>'; return;}
+ $('doctorList').innerHTML=state.doctors.map(function(d){
+   var armed=deleteArmed['doc-'+d.id];
+   return '<div class="doctor"><div><b>'+esc(d.name)+'</b><div style="font-size:13px;color:var(--muted)">'+esc(d.role)+(d.spec?' • '+esc(d.spec):'')+'</div></div><button class="btn '+(armed?'btn-danger':'btn-ghost')+' btn-small" data-del-doc="'+d.id+'">'+(armed?'Tap again to delete':'Delete')+'</button></div>';
+ }).join('');
+ document.querySelectorAll('[data-del-doc]').forEach(function(btn){btn.addEventListener('click',function(){
+   var id=btn.dataset.delDoc;
+   if(deleteArmed['doc-'+id]){state.doctors=state.doctors.filter(function(d){return d.id!==id}); delete deleteArmed['doc-'+id]; toast('Doctor removed'); saveState(); renderDoctors();}
+   else{deleteArmed['doc-'+id]=1; renderDoctors(); setTimeout(function(){delete deleteArmed['doc-'+id]; renderDoctors();},3000);}
+ })});
+}
+$('addDoctorBtn').addEventListener('click',function(){
+ var name=$('dName').value.trim(); if(!name){toast('Please enter a doctor name'); return;}
+ state.doctors.push({id:uid(),name:name,role:$('dRole').value,spec:$('dSpec').value.trim()});
+ $('dName').value=''; $('dSpec').value=''; toast('Doctor added'); saveState(); renderDoctors();
+});
+
+/* Dynamic rows */
+function endoRow(e){e=e||{type:'Gastroscopy',date:'',findings:''};
+ return '<div class="rowline endo-row"><label class="f"><span>Type</span><select class="e-type"><option '+(e.type==='Gastroscopy'?'selected':'')+'>Gastroscopy</option><option '+(e.type==='Colonoscopy'?'selected':'')+'>Colonoscopy</option><option '+(e.type==='ERCP'?'selected':'')+'>ERCP</option></select></label><label class="f"><span>Date</span><input type="date" class="e-date" value="'+esc(e.date)+'"></label><label class="f"><span>Findings</span><input class="e-find" value="'+esc(e.findings)+'" placeholder="Findings…"></label><button class="btn btn-ghost btn-small remove-row">Remove</button></div>';}
+function consultRow(c){c=c||{name:'',spec:'',opinion:''};
+ return '<div class="consult-row" style="border-top:1px solid var(--line);padding-top:10px;margin-top:10px"><div class="rowline2"><label class="f"><span>Consultant name</span><input class="c-name" value="'+esc(c.name)+'" placeholder="Dr. …"></label><label class="f"><span>Specialty</span><input class="c-spec" value="'+esc(c.spec)+'" placeholder="Cardiology, GI…"></label><label class="f"><span>Date seen</span><input type="date" class="c-date" value="'+esc(c.date||'')+'"></label></div><label class="f" style="margin-top:8px"><span>Opinion & recommendation</span><textarea class="c-op" placeholder="Consultant opinion and recommendation…">'+esc(c.opinion)+'</textarea></label><button class="btn btn-ghost btn-small remove-row" style="margin-top:8px">Remove consultant</button></div>';}
+function bindRemove(scope){scope.querySelectorAll('.remove-row').forEach(function(b){b.addEventListener('click',function(){b.closest('.endo-row,.consult-row').remove();});});}
+$('addEndoBtn').addEventListener('click',function(){var d=document.createElement('div');d.innerHTML=endoRow();$('endoRows').appendChild(d.firstChild);bindRemove($('endoRows'));});
+$('addConsultBtn').addEventListener('click',function(){var d=document.createElement('div');d.innerHTML=consultRow();$('consultRows').appendChild(d.firstChild);bindRemove($('consultRows'));});
+
+/* Form */
+function openForm(c){
+ $('formPanel').classList.add('open'); $('toggleFormBtn').textContent='− Close form';
+ $('formTitle').textContent=c?'Edit case':'New case'; $('editId').value=c?c.id:'';
+ $('fPatient').value=c?c.patient:''; $('fAge').value=c?c.age:''; $('fBed').value=c?c.bed:'';
+ $('fDiagnosis').value=c?c.diagnosis:''; $('fStatus').value=c?c.status:'Stable';
+ $('fHistory').value=c?c.history:''; $('fVitals').value=c?c.vitals:''; $('fLabs').value=c?c.labs:''; $('fMeds').value=c?c.meds:''; $('fPlan').value=c?c.plan:'';
+ $('endoRows').innerHTML=(c&&c.endos&&c.endos.length?c.endos.map(endoRow).join(''):endoRow());
+ $('consultRows').innerHTML=(c&&c.consults&&c.consults.length?c.consults.map(consultRow).join(''):consultRow());
+ bindRemove($('formPanel')); $('formPanel').scrollIntoView({behavior:'smooth',block:'start'});
+}
+function closeForm(){$('formPanel').classList.remove('open');$('toggleFormBtn').textContent='+ Add a case';}
+$('toggleFormBtn').addEventListener('click',function(){ $('formPanel').classList.contains('open')?closeForm():openForm(null); });
+$('cancelFormBtn').addEventListener('click',closeForm);
+$('saveCaseBtn').addEventListener('click',function(){
+ var patient=$('fPatient').value.trim(), diag=$('fDiagnosis').value.trim();
+ if(!patient||!diag){toast('Patient code and diagnosis are required'); return;}
+ var endos=[]; document.querySelectorAll('.endo-row').forEach(function(r){var f=r.querySelector('.e-find').value.trim(),dt=r.querySelector('.e-date').value; if(f||dt) endos.push({type:r.querySelector('.e-type').value,date:dt,findings:f});});
+ var consults=[]; document.querySelectorAll('.consult-row').forEach(function(r){var n=r.querySelector('.c-name').value.trim(),o=r.querySelector('.c-op').value.trim(); if(n||o) consults.push({name:n,spec:r.querySelector('.c-spec').value.trim(),date:r.querySelector('.c-date').value,opinion:o});});
+ var data={patient:patient,age:$('fAge').value.trim(),bed:$('fBed').value.trim(),diagnosis:diag,status:$('fStatus').value,history:$('fHistory').value.trim(),vitals:$('fVitals').value.trim(),labs:$('fLabs').value.trim(),meds:$('fMeds').value.trim(),plan:$('fPlan').value.trim(),endos:endos,consults:consults};
+ var id=$('editId').value;
+ if(id){state.cases=state.cases.map(function(c){return c.id===id?Object.assign({},c,data):c}); toast('Case updated');}
+ else{state.cases.push(Object.assign({id:uid(),date:$('handoverDate').value,done:false},data)); toast('Case added to today’s board');}
+ saveState(); closeForm(); render();
+});
+
+function caseFullText(c){
+ var L=[];
+ L.push('========================================');
+ L.push('INPATIENT HANDOVER — FULL CASE');
+ L.push('========================================');
+ L.push('Date: '+fmtDate($('handoverDate').value));
+ L.push('Handing over: '+($('fromDoctor').value||'—'));
+ L.push('Receiving: '+($('toDoctor').value||'—'));
+ L.push('');
+ L.push('Patient: '+c.patient);
+ if(c.age) L.push('Age / Sex: '+c.age);
+ if(c.bed) L.push('Bed / Ward: '+c.bed);
+ L.push('Diagnosis: '+c.diagnosis);
+ L.push('Status: '+c.status+(c.done?' — Handed over':' — Pending handover'));
+ L.push('');
+ L.push('--- Medical History ---');
+ L.push(c.history||'—');
+ L.push('');
+ L.push('--- Vitals ---');
+ L.push(c.vitals||'—');
+ L.push('');
+ L.push('--- Key Labs ---');
+ L.push(c.labs||'—');
+ L.push('');
+ L.push('--- Medications ---');
+ L.push(c.meds||'—');
+ L.push('');
+ L.push('--- Previous Endoscopies ---');
+ if(c.endos&&c.endos.length){c.endos.forEach(function(e,i){L.push((i+1)+'. '+e.type+(e.date?' — '+e.date:'')+(e.findings?' — '+e.findings:''));});}else{L.push('None recorded');}
+ L.push('');
+ L.push('--- Consultants & Opinions ---');
+ if(c.consults&&c.consults.length){c.consults.forEach(function(x,i){L.push((i+1)+'. '+(x.name||'Consultant')+(x.spec?' — '+x.spec:'')+(x.date?' — '+x.date:'')); if(x.opinion) L.push('   Opinion: '+x.opinion);});}else{L.push('None recorded');}
+ L.push('');
+ L.push('--- Plan & Tasks for Next Shift ---');
+ L.push(c.plan||'—');
+ return L.join('\n');
+}
+function copyTextFallback(txt,ta){
+ if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(txt).then(function(){toast('Case copied — paste it anywhere')},function(){ if(ta){ta.focus();ta.select(); try{document.execCommand('copy'); toast('Case copied — paste it anywhere');}catch(e){toast('Tap the text, select all, then copy');}} else toast('Copy not available — select the text manually');});}
+ else if(ta){ta.focus();ta.select(); try{document.execCommand('copy'); toast('Case copied — paste it anywhere');}catch(e){toast('Tap the text, select all, then copy');}}
+ else toast('Copy not available — select the text manually');
+}
+
+/* Cases */
+function todayCases(){return state.cases.filter(function(c){return c.date===$('handoverDate').value});}
+function render(){
+ var list=todayCases(); var q=$('search').value.trim().toLowerCase();
+ var filtered=list.filter(function(c){
+   if(state.filter==='pending'&&c.done) return false;
+   if(state.filter==='done'&&!c.done) return false;
+   if(state.filter==='critical'&&!(c.status==='Critical'||c.status==='Watch')) return false;
+   if(q && !(c.patient+' '+c.diagnosis+' '+c.bed).toLowerCase().includes(q)) return false;
+   return true;});
+ $('statTotal').textContent=list.length;
+ $('statPending').textContent=list.filter(function(c){return !c.done}).length;
+ $('statDone').textContent=list.filter(function(c){return c.done}).length;
+ $('statCritical').textContent=list.filter(function(c){return c.status==='Critical'||c.status==='Watch'}).length;
+ if(!list.length){$('caseList').innerHTML='<div class="empty"><h3>No cases for this day yet</h3><p>Tap “+ Add a case” to add the first inpatient — history, endoscopies and consultant opinions are all inside the case form. A typical day holds about 6 cases.</p></div>'; return;}
+ if(!filtered.length){$('caseList').innerHTML='<div class="empty"><h3>No cases match</h3><p>Try a different search or filter.</p></div>'; return;}
+ $('caseList').innerHTML=filtered.map(function(c){
+   var endos=c.endos&&c.endos.length?'<div class="section"><h4>Previous Endoscopies</h4><ul class="list">'+c.endos.map(function(e){return '<li><b>'+esc(e.type)+'</b>'+(e.date?' — '+esc(e.date):'')+(e.findings?'<br><span style="color:var(--muted)">'+esc(e.findings)+'</span>':'')+'</li>'}).join('')+'</ul></div>':'';
+   var cons=c.consults&&c.consults.length?'<div class="section"><h4>Consultants & Opinions</h4><ul class="list">'+c.consults.map(function(x){return '<li><b>'+esc(x.name||'Consultant')+'</b>'+(x.spec?' • '+esc(x.spec):'')+(x.date?' • '+esc(x.date):'')+(x.opinion?'<br>'+esc(x.opinion):'')+'</li>'}).join('')+'</ul></div>':'';
+   var armed=deleteArmed['case-'+c.id];
+   return '<article class="card"><div class="case-head"><div><div class="case-title">'+esc(c.patient)+' — '+esc(c.diagnosis)+'</div><div class="case-sub">'+esc(c.bed||'')+(c.age?' • '+esc(c.age):'')+'</div></div><div style="display:flex;gap:6px;flex-wrap:wrap"><span class="pill pill-'+c.status+'">'+c.status+'</span>'+(c.done?'<span class="pill pill-done">✓ Handed over</span>':'')+'</div></div>'
+   +(c.history?'<div class="section"><h4>Medical History</h4><p>'+esc(c.history)+'</p></div>':'')
+   +'<div class="meta">'+(c.vitals?'<div><b>Vitals</b><p>'+esc(c.vitals)+'</p></div>':'')+(c.labs?'<div><b>Key Labs</b><p>'+esc(c.labs)+'</p></div>':'')+(c.meds?'<div><b>Medications</b><p>'+esc(c.meds)+'</p></div>':'')+'</div>'
+   +endos+cons
+   +(c.plan?'<div class="section"><h4>Plan & Tasks for Next Shift</h4><p>'+esc(c.plan)+'</p></div>':'')
+   +'<div class="footer-actions"><button class="btn '+(c.done?'btn-ghost':'btn-primary')+' btn-small" data-toggle-done="'+c.id+'">'+(c.done?'↩ Mark as pending':'✓ Mark handed over')+'</button><button class="btn btn-ghost btn-small" data-edit="'+c.id+'">Edit</button><button class="btn '+(armed?'btn-danger':'btn-ghost')+' btn-small" data-del-case="'+c.id+'">'+(armed?'Tap again to delete':'Delete')+'</button></div>'
+   +'<div class="copy-panel"><div class="copy-panel-head"><div><b>Full case — all data in one place</b><span>Everything for this case in one block, ready to copy and send.</span></div><button class="btn btn-primary btn-small" data-copy-case="'+c.id+'">Copy this case</button></div><textarea class="copy-text" readonly data-copy-text="'+c.id+'" aria-label="Full case data for '+esc(c.patient)+'">'+esc(caseFullText(c))+'</textarea><div style="font-size:12px;color:var(--muted);margin-top:6px">Tap the text to select all, or use “Copy this case”.</div></div></article>';
+ }).join('');
+ document.querySelectorAll('[data-toggle-done]').forEach(function(b){b.addEventListener('click',function(){var c=state.cases.find(function(x){return x.id===b.dataset.toggleDone}); if(c){c.done=!c.done; toast(c.done?'Marked as handed over':'Marked as pending'); saveState(); render();}});});
+ document.querySelectorAll('[data-edit]').forEach(function(b){b.addEventListener('click',function(){var c=state.cases.find(function(x){return x.id===b.dataset.edit}); if(c) openForm(c);});});
+ document.querySelectorAll('[data-del-case]').forEach(function(b){b.addEventListener('click',function(){var id=b.dataset.delCase; if(deleteArmed['case-'+id]){state.cases=state.cases.filter(function(x){return x.id!==id}); delete deleteArmed['case-'+id]; toast('Case deleted'); saveState(); render();} else {deleteArmed['case-'+id]=1; render(); setTimeout(function(){delete deleteArmed['case-'+id]; render();},3000);}});});
+ document.querySelectorAll('[data-copy-case]').forEach(function(b){b.addEventListener('click',function(){var c=state.cases.find(function(x){return x.id===b.dataset.copyCase}); if(!c) return; var ta=document.querySelector('[data-copy-text="'+c.id+'"]'); copyTextFallback(caseFullText(c),ta);});});
+ document.querySelectorAll('[data-copy-text]').forEach(function(ta){ta.addEventListener('click',function(){ta.select();}); ta.addEventListener('focus',function(){ta.select();});});
+ /* Keep copy panels fresh if handing-over / receiving doctor changes */
+}
+$('fromDoctor').addEventListener('change',function(){saveState(); render();});
+$('toDoctor').addEventListener('change',function(){saveState(); render();});
+$('carryBtn').addEventListener('click',function(){
+ var pending=todayCases().filter(function(c){return !c.done});
+ if(!pending.length){toast('No pending cases to carry over'); return;}
+ var d=new Date($('handoverDate').value+'T12:00:00'); d.setDate(d.getDate()+1);
+ var iso=d.toISOString().slice(0,10);
+ pending.forEach(function(c){ if(!state.cases.some(function(x){return x.date===iso&&x.patient===c.patient&&x.diagnosis===c.diagnosis})) state.cases.push(Object.assign({},c,{id:uid(),date:iso,done:false})); });
+ $('handoverDate').value=iso; $('dateLabel').textContent=fmtDate(iso); toast(pending.length+' case(s) carried to tomorrow'); saveState(); render();
+});
+function summaryText(){
+ var list=todayCases(); var lines=[];
+ lines.push('INPATIENT HANDOVER — '+fmtDate($('handoverDate').value));
+ lines.push('From: '+($('fromDoctor').value||'—')+'  →  To: '+($('toDoctor').value||'—'));
+ lines.push('Cases: '+list.length+' | Handed over: '+list.filter(function(c){return c.done}).length);
+ lines.push('----------------------------------------');
+ list.forEach(function(c,i){
+   lines.push((i+1)+'. '+c.patient+' — '+c.diagnosis+' ['+c.status+']'+(c.done?' (Handed over)':''));
+   if(c.bed) lines.push('   Bed/Ward: '+c.bed+(c.age?' | '+c.age:''));
+   if(c.history) lines.push('   History: '+c.history);
+   if(c.vitals) lines.push('   Vitals: '+c.vitals);
+   if(c.labs) lines.push('   Labs: '+c.labs);
+   if(c.meds) lines.push('   Meds: '+c.meds);
+   (c.endos||[]).forEach(function(e){lines.push('   Endoscopy: '+e.type+(e.date?' '+e.date:'')+(e.findings?' — '+e.findings:''));});
+   (c.consults||[]).forEach(function(x){lines.push('   Consultant: '+(x.name||'')+(x.spec?' ('+x.spec+')':'')+(x.opinion?' — '+x.opinion:''));});
+   if(c.plan) lines.push('   Plan: '+c.plan);
+   lines.push('');
+ });
+ return lines.join('\n');
+}
+$('downloadBtn').addEventListener('click',function(){
+ if(!todayCases().length){toast('No cases to download yet'); return;}
+ var blob=new Blob([summaryText()],{type:'text/plain'}); var a=document.createElement('a');
+ a.href=URL.createObjectURL(blob); a.download='handover-'+$('handoverDate').value+'.txt'; document.body.appendChild(a); a.click(); a.remove();
+ setTimeout(function(){URL.revokeObjectURL(a.href)},2000); toast('Handover sheet downloaded');
+});
+$('copyBtn').addEventListener('click',function(){
+ if(!todayCases().length){toast('No cases to copy yet'); return;}
+ var txt=summaryText();
+ if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(txt).then(function(){toast('Summary copied — paste it to the receiving doctor')},function(){toast('Copy not available — use Download instead')});}
+ else{toast('Copy not available — use Download instead');}
+});
+/* Export / Import JSON — one file the receiving doctor can import */
+$('exportJsonBtn').addEventListener('click',function(){
+ var list=todayCases();
+ if(!list.length){toast('No cases for this day to export yet'); return;}
+ var payload={type:'inpatient-handover',version:1,exportedAt:new Date().toISOString(),handoverDate:$('handoverDate').value,fromDoctor:$('fromDoctor').value||'',toDoctor:$('toDoctor').value||'',doctors:state.doctors,cases:list};
+ var blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'}); var a=document.createElement('a');
+ a.href=URL.createObjectURL(blob); a.download='handover-'+$('handoverDate').value+'.json'; document.body.appendChild(a); a.click(); a.remove();
+ setTimeout(function(){URL.revokeObjectURL(a.href)},2000); toast('JSON exported — send this file to the receiving doctor');
+});
+$('importJsonBtn').addEventListener('click',function(){ $('importFile').click(); });
+$('importFile').addEventListener('change',function(){
+ var file=this.files&&this.files[0]; this.value=''; if(!file) return;
+ var reader=new FileReader();
+ reader.onload=function(ev){
+   var d;
+   try{ d=JSON.parse(ev.target.result); }catch(e){ toast('Could not read that file — choose a JSON file exported from this app'); return; }
+   if(!d||(!Array.isArray(d.cases)&&!Array.isArray(d.doctors))){ toast('This file does not look like a handover export'); return; }
+   var addedDocs=0,addedCases=0,skipped=0;
+   if(Array.isArray(d.doctors)){ d.doctors.forEach(function(doc){
+     if(!doc||!doc.name){return;}
+     var exists=state.doctors.some(function(x){return x.name.toLowerCase()===String(doc.name).toLowerCase()});
+     if(exists){return;}
+     var keepId=doc.id&&!state.doctors.some(function(x){return x.id===doc.id});
+     state.doctors.push({id:keepId?doc.id:uid(),name:String(doc.name),role:doc.role||'Other',spec:doc.spec||''}); addedDocs++;
+   });}
+   if(Array.isArray(d.cases)){ d.cases.forEach(function(c){
+     if(!c||!c.patient||!c.diagnosis){skipped++; return;}
+     var cdate=c.date||d.handoverDate||$('handoverDate').value;
+     var dup=state.cases.some(function(x){return x.date===cdate&&x.patient===c.patient&&x.diagnosis===c.diagnosis});
+     if(dup){skipped++; return;}
+     var keepId=c.id&&!state.cases.some(function(x){return x.id===c.id});
+     state.cases.push({id:keepId?c.id:uid(),date:cdate,done:!!c.done,patient:String(c.patient),age:c.age||'',bed:c.bed||'',diagnosis:String(c.diagnosis),status:c.status||'Stable',history:c.history||'',vitals:c.vitals||'',labs:c.labs||'',meds:c.meds||'',plan:c.plan||'',endos:Array.isArray(c.endos)?c.endos:[],consults:Array.isArray(c.consults)?c.consults:[]}); addedCases++;
+   });}
+   if(d.handoverDate){ $('handoverDate').value=d.handoverDate; $('dateLabel').textContent=fmtDate(d.handoverDate); }
+   renderDoctors();
+   if(d.fromDoctor) $('fromDoctor').value=d.fromDoctor;
+   if(d.toDoctor) $('toDoctor').value=d.toDoctor;
+   saveState(); render();
+   if(!addedCases&&!addedDocs){ toast('Nothing new to import — those cases are already here'); }
+   else{ toast('Imported '+addedCases+' case(s)'+(addedDocs?', '+addedDocs+' doctor(s)':'')+(skipped?' · '+skipped+' skipped (duplicate or incomplete)':'')); }
+ };
+ reader.onerror=function(){ toast('Could not read that file'); };
+ reader.readAsText(file);
+});
+if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('sw.js').catch(function(){});});}
+loadState(); renderDoctors();
+if(state._pendingFrom) $('fromDoctor').value=state._pendingFrom;
+if(state._pendingTo) $('toDoctor').value=state._pendingTo;
+render();
+</script>
+</body>
+</html>
